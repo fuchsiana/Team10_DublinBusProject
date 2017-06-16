@@ -8,6 +8,13 @@
 	</script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">
 	</script>
+    <script>
+    function myFunc() {
+        document.getElementById("demo").innerHTML = "<br>Hello!!! Your bus will never arrive!!";
+    }
+    
+    
+    </script>
 </head>
 <body>
 	<!--  Bootstrap ideas adapted from https://www.w3schools.com/bootstrap/default.asp  -->
@@ -24,7 +31,7 @@
 				<label for="route">Pick your bus route</label> <input class="form-control" name="route" placeholder="Enter route" type="text">
 			</div>
 			<div class="col-xs-5">
-				<label for="time">Select time and Date</label> <input class="form-control" name="time" placeholder="Enter time and date" type="datetime-local">
+				<label for="time">Select Time and Date</label> <input class="form-control" name="time" placeholder="Enter time and date" type="datetime-local">
 			</div>
 		</div>
 		<div class="form-group row">
@@ -34,7 +41,9 @@
 			<div class="col-xs-5">
 				<label for="Disembark">Destination Stop</label> <input class="form-control" name="disembark" placeholder="Enter destination stop" type="text">
 			</div>
-		</div><button class="btn btn-default" type="submit">Submit</button>
+		</div>
+        <button class="btn btn-default" type="submit" onclick="myFunc()">Submit</button>
+        <div id="demo"></div>
 	</div>
 </body>
 </html>

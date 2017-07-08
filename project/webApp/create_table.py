@@ -38,18 +38,15 @@ def write_to_table():
         
         
 def print_table():
-    ''' Function to print the contents of the table '''
+    ''' Function to print the contents of the table.
+    Just a test function for debugging purposes '''
     engine = connect_db('team1010-test.cnmhll8wqxlt.us-west-2.rds.amazonaws.com', '3306', 'Team1010_Test', 'root', 'password.txt')
     sql = "SELECT * from test;"
     rows = engine.execute(sql).fetchall()
     print(rows)
-    return rows
-#     print("#found {} stations", len(rows))
-#     stations = jsonify(stations=[dict(row) for row in rows])    
-#     engine.dispose()
-#     return stations     
+    return rows   
     
     
 #make_table()
 #write_to_table()
-print_table()
+#print_table()

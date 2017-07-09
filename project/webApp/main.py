@@ -16,7 +16,23 @@ def index():
 
 @app.route('/test', methods=['GET', 'POST'])
 def test():
-    return render_template('greeting.html', Route=request.form['route'], Time=request.form['time'], Embark=request.form['embark'], Disembark=request.form['disembark'])   
+    ''' Test function to access data submitted via form and display on front end '''
+    engine = connect_db('team1010-test.cnmhll8wqxlt.us-west-2.rds.amazonaws.com', '3306', 'Team1010_Test', 'root', 'password.txt')
+    Route=request.form['route']
+    Time=request.form['time']
+    Origin=request.form['origin']
+    Destination=request.form['destination']
+    sql = "SELECT Origin, Destination FROM test where route = %s;" # %s is a placeholder for route in this case
+    rows = engine.execute(sql, Route).fetchall()
+    info = jsonify(info=[dict(row) for row in rows])    
+    engine.dispose()
+    return info
+    #return render_template('greeting.html', Route=request.form['route'], Time=request.form['time'], Origin=request.form['origin'], Destination=request.form['destination'])   
+
+
+#@app.route('/test', methods=['GET', 'POST'])
+#def test():
+#    return render_template('greeting.html', Route=request.form['route'], Time=request.form['time'], Origin=request.form['origin'], Destination=request.form['destination'])   
 
 @app.route('/db')
 def show_db():
@@ -26,7 +42,9 @@ def show_db():
     rows = engine.execute(sql).fetchall()
     info = jsonify(info=[dict(row) for row in rows])    
     engine.dispose()
-    return info   
+    return info
+     
+    
 
 ######################################################################################################################
 # Test code obtained from https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Sending_and_retrieving_form_data #

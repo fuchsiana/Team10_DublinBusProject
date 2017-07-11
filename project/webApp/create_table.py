@@ -10,7 +10,6 @@ def make_table():
     ''' Function to connect to the database and create a table if it doesn't already exist '''
     engine = connect_db('team1010-test.cnmhll8wqxlt.us-west-2.rds.amazonaws.com', '3306', 'Team1010_Test', 'root', 'password.txt')
     try:
-        #use database and create new record
         sql = """CREATE TABLE IF NOT EXISTS test2
             (route VARCHAR(45) NOT NULL,
             day VARCHAR(45) NOT NULL,
@@ -34,19 +33,7 @@ def write_to_table():
     except Exception as e:
         print("Error Type: ", type(e))
         print("Error Details: ", e)
-        
-        
-        
-def print_table():
-    ''' Function to print the contents of the table.
-    Just a test function for debugging purposes '''
-    engine = connect_db('team1010-test.cnmhll8wqxlt.us-west-2.rds.amazonaws.com', '3306', 'Team1010_Test', 'root', 'password.txt')
-    sql = "SELECT * from test;"
-    rows = engine.execute(sql).fetchall()
-    print(rows)
-    return rows   
-    
+           
     
 #make_table()
 #write_to_table()
-#print_table()

@@ -21,7 +21,7 @@ def test():
     Origin=request.form['origin']
     Destination=request.form['destination']
     # This is just a random query I made to test functionality of more complex queries, I set my table up only to have stopID from 1-10
-    sql = "SELECT (t2.time - t1.time) FROM time_table t1, time_table t2 where t1.stopID = %s and t2.stopID = %s;"
+    sql = "SELECT ABS(t2.time - t1.time) FROM time_table t1, time_table t2 where t1.stopID = %s and t2.stopID = %s;"
     rows = engine.execute(sql, Origin, Destination).fetchall() 
     engine.dispose()
     return render_template('form.html', origin=Origin, destination=Destination, time=int(rows[0][0]))

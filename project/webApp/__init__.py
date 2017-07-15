@@ -8,5 +8,5 @@ Created on 20 Jun 2017
 import flask
 from flask import Flask
 
-app = flask.Flask(__name__)
+app = Flask(__name__)
 from webApp import main

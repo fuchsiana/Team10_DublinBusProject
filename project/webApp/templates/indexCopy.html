@@ -17,56 +17,67 @@
             <br>
             <p>Accurately predict how long your journey on Dublin bus is going to take!</p>
          </div>
+          <div class="row">
+              <div class="col-lg-5">
          <!--  Ideas for Bootstrap form adapted from https://www.w3schools.com/bootstrap/bootstrap_forms.asp  -->
          <!--  Below indicates the input form for selecting route, stops, time and date  -->
          <form method="post" action="{{ url_for('test') }}">
              
-        <div class="form-group row">
-
-            <div class="col-xs-12">
-               <label for="route">Pick your bus route</label> 
-               <input class="form-control" name="route" placeholder="Enter route" type="text" id="route">
+            <div class="form-group row">
+               <div class="col-xs-6">
+                  <label for="route">Pick your bus route</label> 
+                  <input class="form-control" name="route" placeholder="Enter route" type="text" id="route">
+                   
+               </div>
             </div>
-             </div>
-             
-             <div class="form-group row">
-            <div class="col-xs-5">
-                <label for="day">Select a day of the week</label>
-                <select class="form-control" name="day" id="day">
-                <option>Monday</option>
-                <option>Tuesday</option>
-                <option>Wednesday</option>
-                <option>Thursday</option>
-                <option>Friday</option>
-                <option>Saturday</option>
-                <option>Sunday</option>
-                </select>
-             </div>
-             
-             <div class="col-xs-5">
-             <label for="time"> Select the time of day</label>
-             <input class="form-control" name="time" placeholder="Select time of day" type="time" id="time">
-             </div>
-             </div>
+                 
                 
-<!--
+            <div class="form-group row">
+               <div class="col-xs-6">
+                  <label for="day">Select a day of the week</label>
+                  <select class="form-control" name="day" id="day">
+                     <option>Monday</option>
+                     <option>Tuesday</option>
+                     <option>Wednesday</option>
+                     <option>Thursday</option>
+                     <option>Friday</option>
+                     <option>Saturday</option>
+                     <option>Sunday</option>
+                  </select>
+               </div>
+               <div class="col-xs-6">
+                  <label for="time"> Select the time of day</label>
+                  <input class="form-control" name="time" placeholder="Select time of day" type="time" id="time">
+               </div>
+            </div>
+            <!--
                <label for="time">Select Time and Date</label> 
                <input class="form-control" name="time" placeholder="Enter time and date" type="datetime-local" id="time">
--->
+               -->
+            <div class="form-group row">
+               <div class="col-xs-6">
+                  <label for="Embark">Origin Stop</label> 
+                  <input class="form-control" name="origin" placeholder="Enter origin stop" type="text" id="origin">
+               </div>
+               <div class="col-xs-6">
+                  <label for="Disembark">Destination Stop</label> 
+                  <input class="form-control" name="destination" placeholder="Enter destination stop" type="text" id="destination">
+               </div>
+            </div>
+            <button class="btn btn-default" type="submit">Submit</button>
+         </form>
+              </div>
+              <br>
 
-         <div class="form-group row">
-            <div class="col-xs-5">
-               <label for="Embark">Origin Stop</label> 
-               <input class="form-control" name="embark" placeholder="Enter origin stop" type="text" id="embark">
-            </div>
-            <div class="col-xs-5">
-               <label for="Disembark">Destination Stop</label> 
-               <input class="form-control" name="disembark" placeholder="Enter destination stop" type="text" id="disembark">
-            </div>
-         </div>
-         <button class="btn btn-default" type="submit">Submit</button>
-          </form>
+       
+       <div class="col-lg-5">
+                 <iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyAlWdso5n60j97uMVDtQDSDQb9AxgYcEhU&q=Trinity+College,Dublin" allowfullscreen>
+</iframe>
+              </div>
+              </div>
          <br>
+<!--  This is where the data submitted by the form will go, see form.html for more details of what will be displayed    -->
+          {% block test %}{% endblock %}
       </div>
    </body>
 </html>

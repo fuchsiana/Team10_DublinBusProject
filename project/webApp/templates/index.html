@@ -9,6 +9,7 @@
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
    </head>
    <body>
+      <script type="text/javascript" src="/static/script.js"></script>
       <!--  Bootstrap ideas adapted from https://www.w3schools.com/bootstrap/default.asp  -->
       <!--  This is the page heading  -->
       <div class="container">
@@ -17,68 +18,71 @@
             <br>
             <p>Accurately predict how long your journey on Dublin bus is going to take!</p>
          </div>
-          <div class="row">
-              <div class="col-lg-5">
-         <!--  Ideas for Bootstrap form adapted from https://www.w3schools.com/bootstrap/bootstrap_forms.asp  -->
-         <!--  Below indicates the input form for selecting route, stops, time and date  -->
-         <form method="post" action="{{ url_for('test') }}">
-             
-            <div class="form-group row">
-               <div class="col-xs-6">
-                  <label for="route">Pick your bus route</label> 
-                  <input class="form-control" name="route" placeholder="Enter route" type="text" id="route">
-                   
-               </div>
+         <div class="row">
+            <div class="col-lg-5">
+               <!--  Ideas for Bootstrap form adapted from https://www.w3schools.com/bootstrap/bootstrap_forms.asp  -->
+               <!--  Below indicates the input form for selecting route, stops, time and date  -->
+               <form method="post" action="{{ url_for('test') }}">
+                  <div class="form-group row">
+                     <div class="col-xs-6">
+                        <label for="route">Pick your bus route</label> 
+                        <input class="form-control" name="route" placeholder="Enter route" type="text" id="route" method="GET" oninput="getRoute()">
+                     </div>
+                  </div>
+                  <div class="form-group row">
+                     <div class="col-xs-6">
+                        <label for="day">Select a day of the week</label>
+                        <select class="form-control" name="day" id="day">
+                           <!--  Disabled selection idea obtained from https://stackoverflow.com/questions/30232146/dynamically-populating-drop-down-list-from-selection-of-another-drop-down-value  -->
+                           <option value="" disabled selected>Select a day</option>
+                           <option>Monday</option>
+                           <option>Tuesday</option>
+                           <option>Wednesday</option>
+                           <option>Thursday</option>
+                           <option>Friday</option>
+                           <option>Saturday</option>
+                           <option>Sunday</option>
+                        </select>
+                     </div>
+                     <div class="col-xs-6">
+                        <label for="time"> Select the time of day</label>
+                        <input class="form-control" name="time" placeholder="Select time of day" type="time" id="time">
+                     </div>
+                  </div>
+                  <!--
+                     <label for="time">Select Time and Date</label> 
+                     <input class="form-control" name="time" placeholder="Enter time and date" type="datetime-local" id="time">
+                     -->
+                  <div class="form-group row">
+                     <div class="col-xs-6">
+                        <label for="origin">Origin Stop</label> 
+                        <select class="form-control" name="origin" id="origin">
+                           <option value="" disabled selected>Select an origin stop</option>
+                        </select>
+                     </div>
+                     <div class="col-xs-6">
+                        <label for="destination">Destination Stop</label> 
+                        <select class="form-control" name="destination" id="destination">
+                           <option value="" disabled selected>Select a destination stop</option>
+                        </select>
+                     </div>
+                  </div>
+                  <button class="btn btn-default" type="submit">Submit</button>
+               </form>
             </div>
-                 
-                
-            <div class="form-group row">
-               <div class="col-xs-6">
-                  <label for="day">Select a day of the week</label>
-                  <select class="form-control" name="day" id="day">
-                     <option>Monday</option>
-                     <option>Tuesday</option>
-                     <option>Wednesday</option>
-                     <option>Thursday</option>
-                     <option>Friday</option>
-                     <option>Saturday</option>
-                     <option>Sunday</option>
-                  </select>
-               </div>
-               <div class="col-xs-6">
-                  <label for="time"> Select the time of day</label>
-                  <input class="form-control" name="time" placeholder="Select time of day" type="time" id="time">
-               </div>
+            <br>
+            <div class="col-lg-5">
+               <!-- This is just to show how the map will look. Will probably have to change to a JavaScript map to get markers and that in but this is where it'll go anyway. For now this is just a placeholder -->
+               <iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyAlWdso5n60j97uMVDtQDSDQb9AxgYcEhU&q=University+College+Dublin,Dublin" allowfullscreen>
+               </iframe>
             </div>
-            <!--
-               <label for="time">Select Time and Date</label> 
-               <input class="form-control" name="time" placeholder="Enter time and date" type="datetime-local" id="time">
-               -->
-            <div class="form-group row">
-               <div class="col-xs-6">
-                  <label for="Embark">Origin Stop</label> 
-                  <input class="form-control" name="origin" placeholder="Enter origin stop" type="text" id="origin">
-               </div>
-               <div class="col-xs-6">
-                  <label for="Disembark">Destination Stop</label> 
-                  <input class="form-control" name="destination" placeholder="Enter destination stop" type="text" id="destination">
-               </div>
-            </div>
-            <button class="btn btn-default" type="submit">Submit</button>
-         </form>
-              </div>
-              <br>
-
-       
-       <div class="col-lg-5">
-<!--           This is just to show how the map will look. Will probably have to change to a JavaScript map to get markers and that in but this is where it'll go anyway. For now this is just a placeholder -->
-                 <iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyAlWdso5n60j97uMVDtQDSDQb9AxgYcEhU&q=University+College+Dublin,Dublin" allowfullscreen>
-</iframe>
-              </div>
-              </div>
+         </div>
          <br>
-<!--  This is where the data submitted by the form will go, see form.html for more details of what will be displayed    -->
-          {% block test %}{% endblock %}
+          
+         <!--  This is where the data submitted by the form will go, see form.html for more details of what will be displayed    -->
+         {% block test %}{% endblock %}
+          
+         <br><br>
       </div>
    </body>
 </html>

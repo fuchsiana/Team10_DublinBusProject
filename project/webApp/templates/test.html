@@ -72,6 +72,7 @@
 </html>
 
 -->
+<!--
 <!DOCTYPE html>
 <html>
   <head>
@@ -130,4 +131,25 @@
     </script>
   </body>
 </html>
+-->
 
+
+
+{% extends "index.html" %}
+{% block array %}
+
+
+<div class="col-xs-6">
+                  <label for="day">Select a day of the week</label>
+                  <select class="form-control" name="day" id="day">
+<!--                      https://stackoverflow.com/questions/42469800/select-from-dropdown-list-in-flask  -->
+                      {% for x in myArray %}
+<option value="{{ x }}"{% if loop.first %} SELECTED{% endif %}>{{ x }}</option>
+{% endfor %}
+                  </select>
+               </div>
+<br><br>
+
+
+
+{% endblock %}

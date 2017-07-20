@@ -9,6 +9,7 @@
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
    </head>
    <body>
+       
       <!--  Bootstrap ideas adapted from https://www.w3schools.com/bootstrap/default.asp  -->
       <!--  This is the page heading  -->
       <div class="container">
@@ -26,8 +27,7 @@
             <div class="form-group row">
                <div class="col-xs-6">
                   <label for="route">Pick your bus route</label> 
-                  <input class="form-control" name="route" placeholder="Enter route" type="text" id="route">
-                   
+                  <input class="form-control" name="route" placeholder="Enter route" type="text" id="route" oninput="getRoute()">
                </div>
             </div>
                  
@@ -78,6 +78,29 @@
          <br>
 <!--  This is where the data submitted by the form will go, see form.html for more details of what will be displayed    -->
           {% block test %}{% endblock %}
+          
+          <p id="demo"></p>
       </div>
+       
+<!--
+            <script>
+           // https://www.w3schools.com/jsref/dom_obj_event.asp
+function getRoute() {
+    
+    var x = document.getElementById("route").value;
+    var jqxhr = $.getJSON("http://127.0.0.1:5000/routes", x, function(data) {
+            var routes = data.routes;
+        console.log(data);
+    //document.getElementById("demo").innerHTML = "You wrote: " + x;
+})
+    
+    }
+</script>
+-->
+       
+              
+
+       
+
    </body>
 </html>

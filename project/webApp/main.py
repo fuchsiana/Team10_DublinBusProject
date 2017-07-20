@@ -39,17 +39,34 @@ def test2():
     return info
     #return render_template('index.html', Route=request.form['route'], Time=request.form['time'], Origin=request.form['origin'], Destination=request.form['destination'])   
    
+   
+@app.route('/routes', methods=['GET'])
+def routes():
+    ''' This function gets the corresponding stops for the route when the route is typed into the input field '''
+    x = request.args.get('route')
+    engine = connect_db('team1010-test.cnmhll8wqxlt.us-west-2.rds.amazonaws.com', '3306', 'Team1010_Test', 'root', 'password.txt')
+    
+    # Get origin stops - dividing this section into origin and destination stops may not be necessary
+    # as the stops for origin and destination will be the same for that route
+    sql = "SELECT origin_stop FROM test2 where Route = %s order by origin_stop asc;"
+    rows = engine.execute(sql, x).fetchall()
+    originStops = []
+    # rows returns a 2D array
+    for i in rows:
+        for j in i:
+            originStops.append(j)
+            
+    # Get destination stops        
+    sql2 = "SELECT origin_stop FROM test2 where Route = %s order by destination_stop asc;"
+    rows2 = engine.execute(sql2, x).fetchall()
+    destinationStops = []
+    for i in rows2:
+        for j in i:
+            destinationStops.append(j)
+            
+    engine.dispose()    
+    output = {}
+    output['originStops'] = originStops
+    output['destinationStops'] = destinationStops
+    return jsonify(output)
 
-######################################################################################################################
-# Test code obtained from https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Sending_and_retrieving_form_data #
-######################################################################################################################
-# from web_app import web_app
-# from flask import Flask, render_template, request
-# 
-# @web_app.route('/', methods=['GET', 'POST'])
-# def form():
-#     return render_template('form.html')
-# 
-# @web_app.route('/hello', methods=['GET', 'POST'])
-# def hello():
-#     return render_template('greeting.html', say=request.form['say'], to=request.form['to'])

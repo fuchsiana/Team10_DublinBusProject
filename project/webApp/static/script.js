@@ -19,7 +19,7 @@ function getRoute() {
 		}
 
 		function updateDestinationStops() {
-			// This will update the destination stop list corresponding to whatever route is typed in
+			// This will update the destination stop list corresponding to whatever route is typed in - this may not be necessary in the end - origin and destination will have the same stops so may only need to have one function rather than 2
 			updateSettings();
 		}
         

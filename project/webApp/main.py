@@ -9,6 +9,8 @@ Created on 20 Jun 2017
 from webApp import app
 from flask import render_template, request, jsonify
 from webApp.Connect_DB import connect_db
+import json
+
 @app.route("/", methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
@@ -24,7 +26,6 @@ def test():
     rows = engine.execute(sql, Origin, Destination).fetchall() 
     engine.dispose()
     return render_template('form.html', origin=Origin, destination=Destination, time=int(rows[0][0]))
- 
  
 @app.route('/test2', methods=['GET', 'POST'])
 def test2():

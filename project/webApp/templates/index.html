@@ -17,100 +17,100 @@
          <!--  This is the page heading  -->
          <div class="jumbotron">
             <h1> <img src="../static/DubBus_Logo.jpg" alt="DubBus_Logo"> Dublin Bus Travel Time Predictor</h1>
-            <br>
-            <p>Accurately predict how long your journey on Dublin bus is going to take! </p>
          </div>
-         <div class="row">
-            <div class="col-md-5">
-               <!--  Ideas for Bootstrap form adapted from https://www.w3schools.com/bootstrap/bootstrap_forms.asp  -->
-               <!--  Below indicates the input form for selecting route, stops, time and date  -->
-               <form method="post" action="{{ url_for('test') }}">
-                  <div class="form-group row">
-                     <div class="col-xs-6">
-                        <label for="route">Pick your bus route</label> 
-                        <input class="form-control" name="route" placeholder="Enter route" type="text" id="route" method="GET" oninput="getRoute()">
-                     </div>
-                     <div class="col-xs-3">
-                        <!--  Code to add translation feature to website obtained from https://translate.google.com/manager/website/-->
-                        <div id="google_translate_element">
-                           <script type="text/javascript">
-                              function googleTranslateElementInit() {
-                                new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
-                              }
-                           </script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-                           <br>
+         <div class="container2">
+            <div class="row">
+               <div class="col-md-5">
+                  <!--  Ideas for Bootstrap form adapted from https://www.w3schools.com/bootstrap/bootstrap_forms.asp  -->
+                  <!--  Below indicates the input form for selecting route, stops, time and date  -->
+                  <form method="post" action="{{ url_for('test') }}">
+                     <div class="form-group row">
+                        <div class="col-xs-6">
+                           <label for="route">Pick your bus route</label> 
+                           <input class="form-control" name="route" placeholder="Enter route" type="text" id="route" method="GET" oninput="getRoute()">
+                        </div>
+                        <div class="col-xs-3">
+                           <!--  Code to add translation feature to website obtained from https://translate.google.com/manager/website/-->
+                           <div id="google_translate_element">
+                              <script type="text/javascript">
+                                 function googleTranslateElementInit() {
+                                   new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
+                                 }
+                              </script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+                              <br>
+                           </div>
                         </div>
                      </div>
-                  </div>
-                  <div class="form-group row">
-                     <div class="col-xs-6">
-                        <label for="day">Select a day of the week</label>
-                        <select class="form-control" name="day" id="day">
-                           <!--  Disabled selection idea obtained from https://stackoverflow.com/questions/30232146/dynamically-populating-drop-down-list-from-selection-of-another-drop-down-value  -->
-                           <option value="" disabled selected>Select a day</option>
-                           <option>Monday</option>
-                           <option>Tuesday</option>
-                           <option>Wednesday</option>
-                           <option>Thursday</option>
-                           <option>Friday</option>
-                           <option>Saturday</option>
-                           <option>Sunday</option>
-                        </select>
+                     <div class="form-group row">
+                        <div class="col-xs-6">
+                           <label for="day">Select a day of the week</label>
+                           <select class="form-control" name="day" id="day">
+                              <!--  Disabled selection idea obtained from https://stackoverflow.com/questions/30232146/dynamically-populating-drop-down-list-from-selection-of-another-drop-down-value  -->
+                              <option value="" disabled selected>Select a day</option>
+                              <option>Monday</option>
+                              <option>Tuesday</option>
+                              <option>Wednesday</option>
+                              <option>Thursday</option>
+                              <option>Friday</option>
+                              <option>Saturday</option>
+                              <option>Sunday</option>
+                           </select>
+                        </div>
+                        <div class="col-xs-6">
+                           <label for="time"> Select the time of day</label>
+                           <input class="form-control" name="time" placeholder="Select time of day" type="time" id="time">
+                        </div>
                      </div>
-                     <div class="col-xs-6">
-                        <label for="time"> Select the time of day</label>
-                        <input class="form-control" name="time" placeholder="Select time of day" type="time" id="time">
+                     <!--
+                        <label for="time">Select Time and Date</label> 
+                        <input class="form-control" name="time" placeholder="Enter time and date" type="datetime-local" id="time">
+                        -->
+                     <div class="form-group row">
+                        <div class="col-xs-6">
+                           <label for="origin">Origin Stop</label> 
+                           <select class="form-control" name="origin" id="origin">
+                              <option value="" disabled selected>Select an origin stop</option>
+                           </select>
+                        </div>
+                        <div class="col-xs-6">
+                           <label for="destination">Destination Stop</label> 
+                           <select class="form-control" name="destination" id="destination">
+                              <option value="" disabled selected>Select a destination stop</option>
+                           </select>
+                        </div>
                      </div>
-                  </div>
-                  <!--
-                     <label for="time">Select Time and Date</label> 
-                     <input class="form-control" name="time" placeholder="Enter time and date" type="datetime-local" id="time">
-                     -->
-                  <div class="form-group row">
-                     <div class="col-xs-6">
-                        <label for="origin">Origin Stop</label> 
-                        <select class="form-control" name="origin" id="origin">
-                           <option value="" disabled selected>Select an origin stop</option>
-                        </select>
-                     </div>
-                     <div class="col-xs-6">
-                        <label for="destination">Destination Stop</label> 
-                        <select class="form-control" name="destination" id="destination">
-                           <option value="" disabled selected>Select a destination stop</option>
-                        </select>
-                     </div>
-                  </div>
-                  <button class="btn btn-default" type="submit">Submit</button>
-               </form>
-            </div>
-            <div class="col-md-7">
-               <div class="row" style="padding:10px;">
-                  <h3> Did you know? </h3>
-                  <div id="changeText" > Dublin bus travels 57 million kilometers a year making 16,883 trips per week </div>
-                  <script type="text/javascript">
-                     // To change what is being displayed after a certain amount of time - http://stackoverflow.com/questions/6398526/javascript-jquery-or-something-to-change-text-every-some-seconds
-                     var text = ["Over 60 per cent of people spend their time on the bus browsing the internet.", "The Dublin Bus control room helps co-ordinate 110 routes, including 19 high-frequency ones that criss-cross the city", "12% of people use Dublin Bus to get a little bit of extra sleep", "90% of passengers always say thank you to their driver", "Dublin bus travels 57 million kilometers a year making 16,883 trips per week"];
-                     var counter = 0;
-                     var elem = document.getElementById("changeText");
-                     setInterval(change, 6500);
-                     function change() {
-                      elem.innerHTML = text[counter];
-                         counter++;
-                         if(counter >= text.length) { counter = 0; }
-                     }
-                  </script>
+                     <button class="btn btn-default" type="submit">Submit</button>
+                  </form>
                </div>
-               <div class="row" style="padding:10px;">
-                  <h3> Weather info will go here - with icons for if it's rainy etc etc. </h3>
+               <div class="col-md-7">
+                  <div class="row" style="padding:10px;">
+                     <h3> Did you know? </h3>
+                     <div id="changeText" > Dublin bus travels 57 million kilometers a year making 16,883 trips per week </div>
+                     <script type="text/javascript">
+                        // To change what is being displayed after a certain amount of time - http://stackoverflow.com/questions/6398526/javascript-jquery-or-something-to-change-text-every-some-seconds
+                        var text = ["Over 60 per cent of people spend their time on the bus browsing the internet.", "The Dublin Bus control room helps co-ordinate 110 routes, including 19 high-frequency ones that criss-cross the city", "12% of people use Dublin Bus to get a little bit of extra sleep", "90% of passengers always say thank you to their driver", "Dublin bus travels 57 million kilometers a year making 16,883 trips per week"];
+                        var counter = 0;
+                        var elem = document.getElementById("changeText");
+                        setInterval(change, 6500);
+                        function change() {
+                         elem.innerHTML = text[counter];
+                            counter++;
+                            if(counter >= text.length) { counter = 0; }
+                        }
+                     </script>
+                  </div>
+                  <div class="row" style="padding:10px;">
+                     <h3> Weather info will go here - with icons for if it's rainy etc etc. </h3>
+                  </div>
                </div>
             </div>
+            <br>
+            <div class="row">
+               <!--  This is where the data submitted by the form will go, see form.html for more details of what will be displayed    -->
+               {% block form %}{% endblock %}        
+            </div>
+            <br><br>
          </div>
-         <br>
-         <div class="row">
-            <!--  This is where the data submitted by the form will go, see form.html for more details of what will be displayed    -->
-            {% block form %}{% endblock %}        
-         </div>
-         <br><br>
       </div>
    </body>
 </html>

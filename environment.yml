@@ -43,6 +43,7 @@ dependencies:
 - openssl=1.0.2l=vc14_0
 - pandas=0.20.2=np113py36_0
 - pip=9.0.1=py36_1
+- pymysql=0.7.9=py36_0
 - pyparsing=2.1.4=py36_0
 - pyqt=5.6.0=py36_2
 - python=3.6.1=2

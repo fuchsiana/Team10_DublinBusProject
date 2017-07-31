@@ -3,34 +3,27 @@ import numpy as np
 import csv
 import feather
 import pickle
-
+import time
 
 
 def create_base_on_route():
     
     res = pd.read_feather('DBus_stage_two_clean_v4.feather')
+# here create list containing all required route feather files
     res['route'] = res['JourneyPatternID'].str[:4]
-    if 'level_0' in res.columns:
-        res.drop('level_0', axis=1, inplace=True)
-    route_list = res.route.unique()
+    route_list = ['put', 'in', 'all', 'routes', 'you','want','a', 'feather', 'file', 'for', 'e.g.', '046A']
     for r in route_list:
         print(r)
+        tp1 = time.time()
         temp = res[res.route == r]
         filename = 'route' + str(r) + '.feather'
         temp = temp.reset_index()
         temp.to_feather(filename)
+        print("Time for", r, ":", int(time.time() - tp1))
         del temp
-        
-def create_route_list():
-    res = pd.read_feather('DBus_stage_two_clean_v4.feather')
-    res['route'] = res['JourneyPatternID'].str[:4]
-    route_list = res.route.unique()
-    print(route_list)
-    pickle_temp = open('input3_routs_list.pkl', 'wb')
-    pickle.dump(route_list, pickle_temp)
-    pickle_temp.close()
+
 
 
 
 if __name__ == '__main__':
-    create_route_list()
+    create_base_on_route()

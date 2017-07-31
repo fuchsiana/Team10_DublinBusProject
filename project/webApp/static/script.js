@@ -60,3 +60,59 @@ function getRoute() {
 		updateDestinationStops();
 	}, 2000);
 }
+
+
+function getLiveWeather() {
+	//call weather API from openweathermap - https://openweathermap.org/current and https://openweathermap.org/weather-conditions
+	var weatherdata;
+	$.getJSON('http://api.openweathermap.org/data/2.5/weather?q=dublin,ie&units=metric&appid=9ce0d37e8c0ceb69395465d3d9ea6594', function(data) {
+		var currentWeather = data.weather[0].description;
+		var current_temp = data.main.temp;
+		var wind_speed = data.wind.speed;
+		var icon = ("<img src='http://openweathermap.org/img/w/" + data.weather[0].icon + ".png'>");
+		document.getElementById("weather").innerHTML = current_temp + " &#8451 <br>" + currentWeather + "<br>" + wind_speed + " m/s <br>" + icon;
+	})
+}
+
+
+// Ideas for using night mode adapted from - https://stackoverflow.com/questions/4358155/changing-background-based-on-time-of-day-using-javascript
+// This is a dynamic function which automatically sets the page to night mode if between 9pm and 6am
+function DayNight_Mode() {
+	var currentTime = new Date().getHours();
+	if (6 <= currentTime && currentTime < 21) {
+		document.getElementById('pagestyle').setAttribute('href', '/static/mainStyle.css');
+	} else {
+		document.getElementById('pagestyle').setAttribute('href', '/static/nightMode.css');
+	}
+}
+
+// http://www.developphp.com/video/JavaScript/Change-Style-Sheet-Using-Tutorial-CSS-Swap-Stylesheet
+function toggleNightMode() {
+    if (document.getElementById("toggle").checked) {
+        document.getElementById('pagestyle').setAttribute('href', '/static/nightMode.css');
+    } else {
+        document.getElementById('pagestyle').setAttribute('href', '/static/mainStyle.css');      
+    }
+}
+
+               $(function () {
+                   $('#datePicker').datetimepicker({
+                       format: 'L',
+                       format: 'DD/MM/YYYY',
+                   });
+               });
+
+                $(function () {
+               $('.clockpicker').clockpicker({
+                   placement: 'bottom',
+                   align: 'left',
+                   autoclose: true,
+                   'default': 'now'
+               });
+                  });
+        
+
+$( document ).ready(function() {
+    // Automatically trigger DayNight_Mode()
+    DayNight_Mode();
+});

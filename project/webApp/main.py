@@ -14,17 +14,22 @@ import json
 @app.route("/", methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
+    #return render_template('indexCopy.html')
+
 
 @app.route('/test', methods=['POST'])
 def test():
     ''' Test function to get time predictions from db '''
     engine = connect_db('team1010-test.cnmhll8wqxlt.us-west-2.rds.amazonaws.com', '3306', 'Team1010_Test', 'root', 'password.txt')
+    print("time is: ", request.form['time'])
+    print("date is: ", request.form['date'])
     Origin=request.form['origin']
     Destination=request.form['destination']
     # This is just a random query I made to test functionality of more complex queries, I set my table up only to have stopID from 1-10
     sql = "SELECT ABS(t2.time - t1.time) FROM time_table t1, time_table t2 where t1.stopID = %s and t2.stopID = %s;"
     rows = engine.execute(sql, Origin, Destination).fetchall() 
     engine.dispose()
+    #return (origin=Origin, destination=Destination, time=int(rows[0][0]))
     return render_template('form.html', origin=Origin, destination=Destination, time=int(rows[0][0]))
  
 @app.route('/test2', methods=['GET', 'POST'])

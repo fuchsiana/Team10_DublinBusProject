@@ -1,3 +1,7 @@
+See wiki for detailed instructions.
+
+---------------------------
+
 get_stops_sequence_by_googletransit.ipynb requires stop_times.csv and trips.csv from the zip here: https://github.com/wjdelaney/Team-10/blob/master/project/DataAnalytics/supplemental_data_files/googletransitdbfeedp20121129-1547.zip
 
 Please copy these three files into a local folder to run.

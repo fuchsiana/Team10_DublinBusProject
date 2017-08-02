@@ -23,6 +23,12 @@
     font-size: 16px;
 }
 
+#map {
+        height:500px;
+        width:500px;
+        background-color: aliceblue;
+} 
+
 .container{
     background-color: #313131;
     color: #F6F3F2;
@@ -30,7 +36,7 @@
 }
 
 .container2{
-    padding: 15px;    
+    padding: 10px;    
 }
 
 .box {
@@ -53,7 +59,22 @@ body {
     color: #F6F3F2;
 }
 
+body, html {
+    height: 100%;
+    margin: 0;  
+}
+
+.pic {
+    background-image: url(Busses.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: left;
+    height: 45%; 
+}
+
+
 /* CSS idesa for button and button:hover adapted from w3schools.com at http://www.w3schools.com/css/css3_buttons.asp*/
+/*
 button {
     background-color: #759FBC;
     border: 1px solid white;
@@ -66,6 +87,7 @@ button {
     margin: 4px 2px;
     transition-duration: 0.4s;
 }
+*/
 
 
 /* Code for toggle switch adapted from https://www.w3schools.com/howto/howto_css_switch.asp*/
@@ -132,4 +154,11 @@ input:checked + .slider:before {
 
 .datepicker {
     cursor: pointer;
+}
+
+.footer {
+    background-color: #313131;
+    height: 70px;
+    bottom: 0;
+    color: aliceblue;
 }

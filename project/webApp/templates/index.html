@@ -16,147 +16,142 @@
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
       <link id="pagestyle" rel="stylesheet" type="text/css" href="/static/mainStyle.css">
       <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/clockpicker/0.0.7/bootstrap-clockpicker.min.css" />
+      <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
    </head>
    <body onload="getLiveWeather()">
-      <!--         <body>-->
+      <!--   <body>-->
       <!--  Bootstrap ideas adapted from https://www.w3schools.com/bootstrap/default.asp  -->
-      <!--  This is the page heading  -->
-      <div class="jumbotron">
-         <h1> <img src="/static/DubBus_Logo.jpg" alt="DubBus_Logo"> Dublin Bus Travel Time Predictor</h1>
-      </div>
+      <!--  Navigation bar ideas adapted from https://v4-alpha.getbootstrap.com/components/navbar/?#color-schemes-->
+      <nav class="navbar navbar-inverse bg-inverse">
+         <div class="container-fluid">
+            <div class="navbar-header">
+               <a class="navbar-brand" href="#"><img src="/static/LogoNavBar.JPG" width="30" height="30" class="d-inline-block align-left" align="left" alt="">      Dublin bus travel time predictor</a>
+            </div>
+            <ul class="nav navbar-nav">
+               <li class="active"><a href="/templates/index.html">Home</a></li>
+               <li><a href="/templates/fareInfo.html">Fares</a></li>
+               <li><a href="/templates/generalInformation.html">General information</a></li>
+            </ul>
+         </div>
+      </nav>
+      <div class="pic"></div>
+      <br>
       <div class="container">
          <div class="container2">
             <div class="row">
-               <div class="col-sm-5">
-                  <div class="box">
-                     <!--  Ideas for Bootstrap form adapted from https://www.w3schools.com/bootstrap/bootstrap_forms.asp  -->
-                     <!--  Below indicates the input form for selecting route, stops, time and date  -->
-                     <form method="post" action="{{ url_for('test') }}">
-                        <div class="form-group row">
-                           <div class="col-xs-6">
-                              <label for="route">Pick your bus route</label> 
-                              <input class="form-control" name="route" placeholder="Enter route" type="text" id="route" method="GET" oninput="getDirection()">
-                           </div>
-                           <div class="col-xs-6">
-                              <label for="direction">Direction</label> 
-                              <select class="form-control" name="direction" id="direction" onchange="getStops()">
-                                 <option value="" disabled selected>Select direction</option>
-                              </select>
-                           </div>
-                        </div>
-                        <div class="form-group row">
-                           <div class="col-xs-6">
-                              <label for="day">Select your date</label>
-                              <!-- Code for datepicker adapted from http://eonasdan.github.io/bootstrap-datetimepicker/#bootstrap-3-datepicker-v4-docs  -->
-                              <div class='input-group date' id="datePicker">
-                                 <input type='text' class="form-control" id="date" name="date"  placeholder="Select a date"/>
-                                 <span class="input-group-addon">
-                                 <span class="glyphicon glyphicon-calendar"></span>
-                                 </span>
-                              </div>
-                           </div>
-                           <div class="col-xs-6">
-                              <label for="time"> Select the time of day</label>
-                              <!--  Code for clockpicker adapted from https://weareoutman.github.io/clockpicker/-->
-                              <div class="input-group clockpicker" id="clockPicker">
-                                 <input type="text" class="form-control" name="time" id="time" placeholder="Select the time"/>
-                                 <span class="input-group-addon">
-                                 <span class="glyphicon glyphicon-time"></span>
-                                 </span>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="form-group row">
-                           <div class="col-xs-6">
-                              <label for="origin">Origin Stop</label> 
-                              <select class="form-control" name="origin" id="origin">
-                                 <option value="" disabled selected>Select an origin stop</option>
-                              </select>
-                           </div>
-                           <div class="col-xs-6">
-                              <label for="destination">Destination Stop</label> 
-                              <select class="form-control" name="destination" id="destination">
-                                 <option value="" disabled selected>Select a destination stop</option>
-                              </select>
-                           </div>
-                        </div>
-                        <button class="btn btn-default" type="submit">Submit</button>
-                     </form>
-                  </div>
-                  <br>
-                  <div class="row">
-                     <div class="col-sm-12">
-                        <div class="box" style="text-align:center">
-                           <h3> Check out the current weather conditions </h3>
-                           <p style="font-size:16px" id="weather"></p>
-                           <div class="row">
-                              <h3> Did you know? <img src="/static/LightBulb.jpg" alt="LightBulb" width="90px" height="90px" style="text-align: left"> </h3>
-                              <div id="changeText" > Dublin bus travels 57 million kilometers a year making 16,883 trips per week </div>
-                              <script type="text/javascript">
-                                 // To change what is being displayed after a certain amount of time - http://stackoverflow.com/questions/6398526/javascript-jquery-or-something-to-change-text-every-some-seconds
-                                 var text = ["Over 60 per cent of people spend their time on the bus browsing the internet.", "The Dublin Bus control room helps co-ordinate 110 routes, including 19 high-frequency ones that criss-cross the city", "12% of people use Dublin Bus to get a little bit of extra sleep                      ", "90% of passengers always say thank you to their driver                          ", "Dublin bus travels 57 million kilometers a year making 16,883 trips per week"];
-                                 var counter = 0;
-                                 var elem = document.getElementById("changeText");
-                                 setInterval(change, 6500);
-                                 function change() {
-                                  elem.innerHTML = text[counter];
-                                     counter++;
-                                     if(counter >= text.length) { counter = 0; }
-                                 }
-                              </script>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="col-sm-1"></div>
                <div class="col-sm-6">
-                  <div class="row">
-                     <div class="col-sm-12">
-                        <!--  This is where the data submitted by the form will go, see form.html for more details of what will be displayed    -->
-                        {% block form %}{% endblock %}      
+                  <!--  Ideas for Bootstrap form adapted from https://www.w3schools.com/bootstrap/bootstrap_forms.asp  -->
+                  <!--  Below indicates the input form for selecting route, stops, time and date  -->
+                  <form method="post" action="{{ url_for('test') }}">
+                     <div class="form-group row">
+                        <div class="col-xs-6">
+                           <label for="route">Pick your bus route</label> 
+                           <input class="form-control route" name="route" placeholder="Enter route" type="text" id="route" method="GET" oninput="getDirection()">
+                        </div>
+                        <div class="col-xs-6">
+                           <label for="direction">Direction</label> 
+                           <select class="form-control" name="direction" id="direction" onchange="getStops()">
+                              <option value="" disabled selected>Select direction</option>
+                           </select>
+                        </div>
                      </div>
-                  </div>
-                  <div class="row">
-                     <div style="padding:20px">
-                        <iframe width="90%" height="450" style="border:2px solid black; box-shadow: 5px 5px 5px #888888;" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyAlWdso5n60j97uMVDtQDSDQb9AxgYcEhU&q=University+College+Dublin,Dublin" allowfullscreen>
-                        </iframe>
+                     <div class="form-group row">
+                        <div class="col-xs-6">
+                           <label for="day">Select your date</label>
+                           <!-- Code for datepicker adapted from http://eonasdan.github.io/bootstrap-datetimepicker/#bootstrap-3-datepicker-v4-docs  -->
+                           <div class='input-group date' id="datePicker">
+                              <input type='text' class="form-control" id="date" name="date"  placeholder="Select a date"/>
+                              <span class="input-group-addon">
+                              <span class="glyphicon glyphicon-calendar"></span>
+                              </span>
+                           </div>
+                        </div>
+                        <div class="col-xs-6">
+                           <label for="time"> Select the time of day</label>
+                           <!--  Code for clockpicker adapted from https://weareoutman.github.io/clockpicker/-->
+                           <div class="input-group clockpicker" id="clockPicker">
+                              <input type="text" class="form-control" name="time" id="time" placeholder="Select the time"/>
+                              <span class="input-group-addon">
+                              <span class="glyphicon glyphicon-time"></span>
+                              </span>
+                           </div>
+                        </div>
                      </div>
+                     <div class="form-group row">
+                        <div class="col-xs-6">
+                           <label for="origin">Origin Stop</label> 
+                           <select class="form-control" name="origin" id="origin">
+                              <option value="" disabled selected>Select an origin stop</option>
+                           </select>
+                        </div>
+                        <div class="col-xs-6">
+                           <label for="destination">Destination Stop</label> 
+                           <select class="form-control" name="destination" id="destination">
+                              <option value="" disabled selected>Select a destination stop</option>
+                           </select>
+                        </div>
+                     </div>
+                     <button class="btn btn-default" type="submit">Submit</button>
+                  </form>
+               </div>
+               <div class="col-sm-6" style="text-align:center">
+                  <h3> Check out the current weather conditions </h3>
+                  <p style="font-size:16px" id="weather"></p>
+                  <div class="row" style="text-align:center">
+                     <h3> Did you know? <img src="/static/LightBulb.jpg" alt="LightBulb" width="90px" height="90px" style="text-align: left"> </h3>
+                     <div id="changeText" > Dublin bus travels 57 million kilometers a year making 16,883 trips per week </div>
+                     <script type="text/javascript">
+                        // To change what is being displayed after a certain amount of time - http://stackoverflow.com/questions/6398526/javascript-jquery-or-something-to-change-text-every-some-seconds
+                        var text = ["Over 60 per cent of people spend their time on the bus browsing the internet.", "The Dublin Bus control room helps co-ordinate 110 routes, including 19 high-frequency ones that criss-cross the city", "12% of people use Dublin Bus to get a little bit of extra sleep                      ", "90% of passengers always say thank you to their driver                          ", "Dublin bus travels 57 million kilometers a year making 16,883 trips per week"];
+                        var counter = 0;
+                        var elem = document.getElementById("changeText");
+                        setInterval(change, 6500);
+                        function change() {
+                         elem.innerHTML = text[counter];
+                            counter++;
+                            if(counter >= text.length) { counter = 0; }
+                        }
+                     </script>
                   </div>
                </div>
+               <br><br>
             </div>
-            <br>
-            <div class="row">
-               <div class="col-sm-5">
-                  <div class="box">
-                     <h3> Keep track of the road conditions all across the country! </h3>
-                     <!-- To input twitter feed on webpage obtained from https://support.twitter.com/articles/20170071-->
-                     <a class="twitter-timeline" data-width="100%" data-height="240px" data-theme="light" border-color="#0000" href="https://twitter.com/aaroadwatch">Tweets by aaroadwatch</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-                     <br><br>
-                     <h4> Follow us on Twitter or Tweet to us! </h4>
-                     <a href="https://twitter.com/Team1010_DubBus" class="twitter-follow-button" data-show-count="false">Follow @Team1010_DubBus</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-                     <a href="https://twitter.com/intent/tweet?screen_name=Team1010_DubBus" class="twitter-mention-button" data-show-count="false">Tweet to @Team1010_DubBus</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-                  </div>
-               </div>
-            </div>
-            <br>
-            <!--  Ideas for getting a toggle switch obtained from https://www.w3schools.com/howto/howto_css_switch.asp-->
-            <label for="toggle"> Click me to toggle night mode </label>
-            <label class="switch">
-            <input id="toggle" type="checkbox" onclick="toggleNightMode()">
-            <span class="slider round"></span></label>
             <br><br>
-         </div>
-         <!--  Code to add translation feature to website obtained from https://translate.google.com/manager/website/-->
-         <div id="google_translate_element">
-            <script type="text/javascript">
-               function googleTranslateElementInit() {
-                 new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
-               }
-            </script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+            <div class="row">
+               <div class="col-sm-2">
+                  <!--  Code to add translation feature to website obtained from https://translate.google.com/manager/website/-->
+                  <div id="google_translate_element">
+                     <script type="text/javascript">
+                        function googleTranslateElementInit() {
+                          new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
+                        }
+                     </script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+                  </div>
+               </div>
+               <div class="col-sm-3" style="text-align: center">
+                  <!--  Ideas for getting a toggle switch obtained from https://www.w3schools.com/howto/howto_css_switch.asp-->
+                  <label for="toggle" style="font-size:15px; text-align:left"> Click me to toggle night mode </label>
+                  <label class="switch">
+                  <input id="toggle" type="checkbox" onclick="toggleNightMode()">
+                  <span class="slider round"></span></label>
+               </div>
+               <!--
+                  <div class="col-sm-6">
+                      <h3> Keep track of the road conditions all across the country! </h3>
+                   To input twitter feed on webpage obtained from https://support.twitter.com/articles/20170071
+                  <a class="twitter-timeline" data-width="100%" data-height="240px" data-theme="light" href="https://twitter.com/aaroadwatch">Tweets by aaroadwatch</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+                  <br><br>
+                  <h4> Follow us on Twitter or Tweet to us! </h4>
+                  <a href="https://twitter.com/Team1010_DubBus" class="twitter-follow-button" data-show-count="false">Follow @Team1010_DubBus</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+                  <a href="https://twitter.com/intent/tweet?screen_name=Team1010_DubBus" class="twitter-mention-button" data-show-count="false">Tweet to @Team1010_DubBus</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+                  </div>
+                  -->
+            </div>
             <br>
          </div>
+          {% block form %}{% endblock %}
       </div>
+      <br><br>
       <footer class="footer">
          <p>Emma Byrne, Wen-Ting Chang, Ian Fuchs, Willie Delaney </p>
       </footer>

@@ -42,17 +42,16 @@ function getDirection() {
 		}
 		// Call function to update the direction dropdown menu
 		updateDirection();
-	}, 1500);
+	}, 2000);
 }
 
 function getStops() {
 	console.log("Functon triggered, getting stops");
 	//clearTimeout(delayTimer);
-	//	delayTimer = setTimeout(function() {
 	var origin = $('#origin'),
 		destination = $('#destination'),
 		direction = $('#direction');
-	console.log("The direction is " + direction.val());
+	console.log("The direction is: " + direction.val());
 
 	function updateStops() {
 		// This will update the origin stop list corresponding to whatever route is typed in
@@ -67,7 +66,6 @@ function getStops() {
 	destination.attr('disabled', true);
 
 	function updateStopSettings() {
-		//route = document.getElementById("route").value;
 		var jqxhr = $.getJSON("http://127.0.0.1:5000/stops?direction=" + direction.val(), null, function(data) {
 			// Populate the origin stops
 			origin.empty();
@@ -92,7 +90,6 @@ function getStops() {
 	}
 	// Call functions to update origin and destination stops
 	updateStops();
-	//}, 500);
 }
 
 function getLiveWeather() {
@@ -102,8 +99,10 @@ function getLiveWeather() {
 		var currentWeather = data.weather[0].description;
 		var current_temp = data.main.temp;
 		var wind_speed = data.wind.speed;
+        // Make first letter of currentWeather uppercase
+        var currentWeatherFirstLetterUppercase = currentWeather.charAt(0).toUpperCase() + currentWeather.slice(1);
 		var icon = ("<img src='http://openweathermap.org/img/w/" + data.weather[0].icon + ".png'>");
-		document.getElementById("weather").innerHTML = current_temp + " &#8451 <br>" + currentWeather + "<br>" + wind_speed + " m/s <br>" + icon;
+		document.getElementById("weather").innerHTML = "The current temperature is: " + current_temp + " &#8451 <br> Windspeeds of: " + wind_speed + " m/s <br> Overall: " + currentWeatherFirstLetterUppercase + icon;
 	})
 }
 
@@ -111,24 +110,25 @@ function getLiveWeather() {
 // This is a dynamic function which automatically sets the page to night mode if between 9pm and 6am
 function DayNight_Mode() {
 	var currentTime = new Date().getHours();
-	if (6 <= currentTime && currentTime < 21) {
+	if (6 <= currentTime && currentTime < 22) {
 		document.getElementById('pagestyle').setAttribute('href', '/static/mainStyle.css');
 	} else {
 		document.getElementById('pagestyle').setAttribute('href', '/static/nightMode.css');
+        document.getElementById("toggle").checked = true; // make the toggle checked if night mode is running
 	}
 }
 
 // Ideas for changing what CSS file is linked adapted from - http://www.developphp.com/video/JavaScript/Change-Style-Sheet-Using-Tutorial-CSS-Swap-Stylesheet
 function toggleNightMode() {
-	if (document.getElementById("toggle").checked) {
-		document.getElementById('pagestyle').setAttribute('href', '/static/nightMode.css');
-	} else {
-		document.getElementById('pagestyle').setAttribute('href', '/static/mainStyle.css');
-	}
+    if (document.getElementById("toggle").checked) {
+	   document.getElementById('pagestyle').setAttribute('href', '/static/nightMode.css');
+    } else {
+	   document.getElementById('pagestyle').setAttribute('href', '/static/mainStyle.css');
+    }
 }
 
 
-// Code for datePicker adapted from
+// Code for datePicker adapted from http://eonasdan.github.io/bootstrap-datetimepicker/#bootstrap-3-datepicker-v4-docs
 // Code for clockpicker adapted from https://weareoutman.github.io/clockpicker/
 $(function() {
 	$('#datePicker').datetimepicker({
@@ -136,6 +136,7 @@ $(function() {
 		format: 'DD/MM/YYYY',
 	});
 });
+
 $(function() {
 	$('.clockpicker').clockpicker({
 		placement: 'bottom',
@@ -150,3 +151,19 @@ $(document).ready(function() {
 	// Automatically trigger DayNight_Mode()
 	DayNight_Mode();
 });
+
+// Code to get autocomplete suggestions working adapted from https://jqueryui.com/autocomplete/ and https://stackoverflow.com/questions/9569146/jquery-ui-autocomplete-how-to-trigger-an-event-when-an-item-is-selected
+
+var availableRoutes = ['1', '4', '7', '8', '9', '11', '13', '14', '15', '16', '17', '18', '25', '26', '27', '31', '32', '33', '37', '38', '39', '40', '41', '42', '43', '44', '46', '47', '49', '53', '59', '61', '63', '65', '66', '67', '68', '69', '70', '75', '76', '79', '7B', '7D', '83', '84', '86', '102', '104', '111', '114', '116', '118', '120', '122', '123', '130', '140', '142', '145', '14C', '150', '151', '15A', '15B', '161', '16C', '17A', '184', '185', '220', '236', '238', '239', '25A', '25B', '25X', '270', '27A', '27B', '27X', '29A', '31A', '31B', '32X', '332', '33A', '33B', '33X', '38A', '38B', '39A', '40B', '40D', '41A', '41B', '41C', '41X', '44B', '45A', '46A', '46E', '51D', '51X', '54A', '56A', '65B', '66A', '66B', '66X', '67X', '68A', '69X', '747', '76A', '77A', '79A', '83A', '84A', '84X']
+
+$(function() {
+    $( ".route" ).autocomplete({
+      source: availableRoutes,
+      select: function(event, ui) {
+        // Calls the getDirection() function when the user clicks on something from the autocomplete menu - not sure if this is a good idea as could
+        // delay user getting the direction information but adds rediundancy if the user clicks something after the eventlistener has already
+        // gathered the directions
+        getDirection();
+    }
+    });
+  } );

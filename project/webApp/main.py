@@ -7,11 +7,18 @@ Created on 20 Jun 2017
 # This is the main flask app, run the run.py file to run the code
 
 from webApp import app
-from flask import render_template, request, jsonify
+from flask import Flask, flash, render_template, request, abort, jsonify
 from webApp.Connect_DB import connect_db
+import webApp.get_predictive_time as gpt
 import json
 import time
 from datetime import datetime
+import sys, os
+import pickle
+
+# Global variable
+global ROUTE
+global DIRECTION
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
@@ -21,31 +28,44 @@ def index():
 @app.route('/test', methods=['POST'])
 def test():
     ''' Test function to get time predictions from db '''
-    engine = connect_db('team1010.cnmhll8wqxlt.us-west-2.rds.amazonaws.com', '3306', 'Team1010', 'Team1010_User', 'password.txt')
-    Origin=request.form['origin']
-    Destination=request.form['destination']
-    Time=request.form['time']
+    engine = connect_db('team1010.cnmhll8wqxlt.us-west-2.rds.amazonaws.com', '3306', 'DBus', 'Team1010_User',
+                        'password.txt')
+    req = {}
+    req['route'] = ROUTE
+    req['direction'] = DIRECTION
+    req['orig_stop_id']=request.form['origin'].split(', ')[0]
+    req['dest_stop_id'] = request.form['destination'].split(', ')[0]
+    req['time'] = request.form['time']
     # Idea to split date format dd/mm/yy into day, month and date adapted from https://stackoverflow.com/questions/4056683/python-getting-weekday-from-an-input-date
-    inputDate = time.strftime("%A %B %C", time.strptime(request.form['date'], "%d/%m/%Y"))
-    Day = inputDate.split()[0]
-    Month = inputDate.split()[1]
-    Date = inputDate.split()[2]
-    # This is just a random query I made to test functionality of more complex queries, I set my table up only to have stopID from 1-10
-    #sql = "SELECT ABS(t2.time - t1.time) FROM time_table t1, time_table t2 where t1.stopID = %s and t2.stopID = %s;"
-    #rows = engine.execute(sql, Origin, Destination).fetchall() 
-    #engine.dispose()
-    #time=int(rows[0][0])
-    calc = abs(int(Origin) - int(Destination))
-    return render_template('form.html', journeyTime=Time, origin=Origin, destination=Destination, time=calc, day=Day, month=Month, date=Date)
-   
+    inputDate = time.strftime("%A %Y-%m-%d", time.strptime(request.form['date'], "%d/%m/%Y"))
+    req['day'] = inputDate.split()[0]
+    req['date'] = inputDate.split()[1]
+    # Get prediction timetable
+    predictive_time = gpt.get_predictive_timetable(req)
+    # Get stops information from pickle file
+    thisPlace = os.path.dirname(os.path.abspath(__file__))
+    stopsInfo = os.path.join(thisPlace, 'stops_info.pkl')
+    file = open(stopsInfo, 'rb')
+    #file = open('stops_info.pkl', 'rb')
+    stops = pickle.load(file)
+    file.close()
+    return render_template('form.html', journeyTime=predictive_time[2], origin=req['orig_stop_id'], destination=req['dest_stop_id'],
+                           time=predictive_time[0], day=req['day'], date=req['date'], stops=stops, req=req)
+
+
 @app.route('/direction', methods=['GET'])
 def direction():
     ''' This function gets the corresponding stops for the direction when the route is typed into the input field '''
-    x = request.args.get('route')
-    engine = connect_db('team1010.cnmhll8wqxlt.us-west-2.rds.amazonaws.com', '3306', 'Team1010', 'Team1010_User', 'password.txt')
+
+    global ROUTE
+
+    ROUTE = request.args.get('route').zfill(4)
+    engine = connect_db('team1010.cnmhll8wqxlt.us-west-2.rds.amazonaws.com', '3306', 'DBus', 'Team1010_User',
+                        'password.txt')
+
     # Get the direction
-    sql = "SELECT direction from TestTable_direction where route = %s;"
-    rows = engine.execute(sql, x).fetchall()
+    sql = "SELECT trip_headsign FROM routes WHERE route_short_name = %s;"
+    rows = engine.execute(sql, ROUTE).fetchall()
     selectDirection = []
     # rows returns a 2D array
     for i in rows:
@@ -59,19 +79,23 @@ def direction():
 
 @app.route('/stops', methods=['GET'])
 def stops():
+    global ROUTE
+    global DIRECTION
+
     ''' This function gets the corresponding stops for the direction along the chosen route '''
-    x = request.args.get('direction')
-    engine = connect_db('team1010.cnmhll8wqxlt.us-west-2.rds.amazonaws.com', '3306', 'Team1010', 'Team1010_User', 'password.txt')
+    DIRECTION = request.args.get('direction')
+
+    engine = connect_db('team1010.cnmhll8wqxlt.us-west-2.rds.amazonaws.com', '3306', 'DBus', 'Team1010_User',
+                        'password.txt')
     # Get origin stops - dividing this section into origin and destination stops may not be necessary
     # as the stops for origin and destination will be the same for that route
     #sql = "SELECT origin FROM TestTable where route = %s order by origin asc;"
-    sql = "SELECT origin from TestTable where direction=%s order by origin asc;"
-    rows = engine.execute(sql, x).fetchall()
+    sql = """ SELECT stop_id, stop_name FROM routes_stops WHERE route_short_name = %s AND trip_headsign = %s;"""
+    rows = engine.execute(sql, ROUTE.zfill(4), DIRECTION).fetchall()
     originStops = []
     # rows returns a 2D array
     for i in rows:
-        for j in i:
-            originStops.append(j)
+        originStops.append(i[0] + ", " +i[1])
             
     # Get destination stops        
     #sql2 = "SELECT origin FROM TestTable where route = %s order by destination asc;"
@@ -85,4 +109,4 @@ def stops():
     output = {}
     output['originStops'] = originStops
     #output['destinationStops'] = destinationStops
-    return jsonify(output)  
+    return jsonify(output)

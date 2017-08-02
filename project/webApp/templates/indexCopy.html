@@ -16,43 +16,50 @@
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
       <link id="pagestyle" rel="stylesheet" type="text/css" href="/static/mainStyle.css">
       <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/clockpicker/0.0.7/bootstrap-clockpicker.min.css" />
-      
-      
+      <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
    </head>
       <body onload="getLiveWeather()">
 <!--   <body>-->
       <!--  Bootstrap ideas adapted from https://www.w3schools.com/bootstrap/default.asp  -->
-      <!--  This is the page heading  -->
-      <div class="jumbotron">
-         <h1> <img src="/static/DubBus_Logo.jpg" alt="DubBus_Logo"> Dublin Bus Travel Time Predictor</h1>
-      </div>
+      <!--        https://v4-alpha.getbootstrap.com/components/navbar/?#color-schemes-->
+      <nav class="navbar navbar-inverse bg-inverse">
+         <div class="container-fluid">
+            <div class="navbar-header">
+               <a class="navbar-brand" href="#"><img src="/static/LogoNavBar.JPG" width="30" height="30" class="d-inline-block align-left" align="left" alt="">      Dublin bus travel time predictor</a>
+            </div>
+            <ul class="nav navbar-nav">
+               <li class="active"><a href="/templates/indexCopy.html">Home</a></li>
+               <li><a href="/templates/fareInfo.html">Fares</a></li>
+               <li><a href="#">General information</a></li>
+            </ul>
+         </div>
+      </nav>
+      <div class="pic"></div>
+      <br>
       <div class="container">
          <div class="container2">
             <div class="row">
-               <div class="col-md-5 box" style="padding:10px">
+               <div class="col-sm-6">
+                  <!--                  <div class="box">-->
                   <!--  Ideas for Bootstrap form adapted from https://www.w3schools.com/bootstrap/bootstrap_forms.asp  -->
                   <!--  Below indicates the input form for selecting route, stops, time and date  -->
                   <form method="post" action="{{ url_for('test') }}">
                      <div class="form-group row">
                         <div class="col-xs-6">
                            <label for="route">Pick your bus route</label> 
-                           <input class="form-control" name="route" placeholder="Enter route" type="text" id="route" method="GET" oninput="getRoute()">
+                           <input class="form-control route" name="route" placeholder="Enter route" type="text" id="route" method="GET" oninput="getDirection()">
                         </div>
-                        <div class="col-xs-3">
-                           <!--  Code to add translation feature to website obtained from https://translate.google.com/manager/website/-->
-                           <div id="google_translate_element">
-                              <script type="text/javascript">
-                                 function googleTranslateElementInit() {
-                                   new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
-                                 }
-                              </script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-                              <br>
-                           </div>
+                        <div class="col-xs-6">
+                           <label for="direction">Direction</label> 
+                           <select class="form-control" name="direction" id="direction" onchange="getStops()">
+                              <option value="" disabled selected>Select direction</option>
+                           </select>
                         </div>
                      </div>
                      <div class="form-group row">
                         <div class="col-xs-6">
-                           <label for="day">Select a day of the week</label>
+                           <label for="day">Select your date</label>
+                           <!-- Code for datepicker adapted from http://eonasdan.github.io/bootstrap-datetimepicker/#bootstrap-3-datepicker-v4-docs  -->
                            <div class='input-group date' id="datePicker">
                               <input type='text' class="form-control" id="date" name="date"  placeholder="Select a date"/>
                               <span class="input-group-addon">
@@ -62,19 +69,15 @@
                         </div>
                         <div class="col-xs-6">
                            <label for="time"> Select the time of day</label>
+                           <!--  Code for clockpicker adapted from https://weareoutman.github.io/clockpicker/-->
                            <div class="input-group clockpicker" id="clockPicker">
                               <input type="text" class="form-control" name="time" id="time" placeholder="Select the time"/>
                               <span class="input-group-addon">
                               <span class="glyphicon glyphicon-time"></span>
                               </span>
                            </div>
-                           <!--                           <input class="form-control" name="time" placeholder="Select time of day" type="time" id="time">-->
                         </div>
                      </div>
-                     <!--
-                        <label for="time">Select Time and Date</label> 
-                        <input class="form-control" name="time" placeholder="Enter time and date" type="datetime-local" id="time">
-                        -->
                      <div class="form-group row">
                         <div class="col-xs-6">
                            <label for="origin">Origin Stop</label> 
@@ -91,48 +94,16 @@
                      </div>
                      <button class="btn btn-default" type="submit">Submit</button>
                   </form>
-                   
-                   <br>
-                   <div class="row" style="padding:10px; text-align:center">
-                     <h3> Check out the current weather conditions </h3>
-                     <p style="font-size:16px" id="weather"></p>
-                  </div>
-                   <div class="row" style="padding:10px; text-align:center">
-                   <h3> Did you know? </h3>
-                     <div id="changeText" > Dublin bus travels 57 million kilometers a year making 16,883 trips per week </div>
-                     <script type="text/javascript">
-                        // To change what is being displayed after a certain amount of time - http://stackoverflow.com/questions/6398526/javascript-jquery-or-something-to-change-text-every-some-seconds
-                        var text = ["Over 60 per cent of people spend their time on the bus browsing the internet.", "The Dublin Bus control room helps co-ordinate 110 routes, including 19 high-frequency ones that criss-cross the city", "12% of people use Dublin Bus to get a little bit of extra sleep", "90% of passengers always say thank you to their driver", "Dublin bus travels 57 million kilometers a year making 16,883 trips per week"];
-                        var counter = 0;
-                        var elem = document.getElementById("changeText");
-                        setInterval(change, 6500);
-                        function change() {
-                         elem.innerHTML = text[counter];
-                            counter++;
-                            if(counter >= text.length) { counter = 0; }
-                        }
-                     </script>
                 </div>
-                   
-                   
-                   
-                   
-                   
-               </div>
-               <div class="col-sm-1"></div>
-                <div class="col-md-5">      <iframe width="600" height="450" frameborder="20" style="border:2px solid black; box-shadow: 5px 5px 5px #888888;" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyAlWdso5n60j97uMVDtQDSDQb9AxgYcEhU&q=University+College+Dublin,Dublin" allowfullscreen>
-      </iframe>
-</div>
-                
-<!--
-                <div class="row">
-                <div class="col-md-5 box">
-                  <div class="row" style="padding:10px; text-align:center">
-                     <h3> Did you know? </h3>
+               <div class="col-sm-6" style="text-align:center">
+                  <h3> Check out the current weather conditions </h3>
+                  <p style="font-size:16px" id="weather"></p>
+                  <div class="row" sytle="text-align:center">
+                     <h3> Did you know? <img src="/static/LightBulb.jpg" alt="LightBulb" width="90px" height="90px" style="text-align: left"> </h3>
                      <div id="changeText" > Dublin bus travels 57 million kilometers a year making 16,883 trips per week </div>
                      <script type="text/javascript">
                         // To change what is being displayed after a certain amount of time - http://stackoverflow.com/questions/6398526/javascript-jquery-or-something-to-change-text-every-some-seconds
-                        var text = ["Over 60 per cent of people spend their time on the bus browsing the internet.", "The Dublin Bus control room helps co-ordinate 110 routes, including 19 high-frequency ones that criss-cross the city", "12% of people use Dublin Bus to get a little bit of extra sleep", "90% of passengers always say thank you to their driver", "Dublin bus travels 57 million kilometers a year making 16,883 trips per week"];
+                        var text = ["Over 60 per cent of people spend their time on the bus browsing the internet.", "The Dublin Bus control room helps co-ordinate 110 routes, including 19 high-frequency ones that criss-cross the city", "12% of people use Dublin Bus to get a little bit of extra sleep                      ", "90% of passengers always say thank you to their driver                          ", "Dublin bus travels 57 million kilometers a year making 16,883 trips per week"];
                         var counter = 0;
                         var elem = document.getElementById("changeText");
                         setInterval(change, 6500);
@@ -143,53 +114,32 @@
                         }
                      </script>
                   </div>
--->
-                   <br>
-<!--
-                  <div class="row" style="padding:10px; text-align:center">
-                     <h3> Check out the current weather conditions </h3>
-                     <p style="font-size:16px" id="weather"></p>
-                  </div>
--->
                </div>
+               <br><br>
             </div>
-             <br>
-                
-                
-                
-             
-            <div class="row">
-               <!--  This is where the data submitted by the form will go, see form.html for more details of what will be displayed    -->
-               {% block form %}{% endblock %}
-               <!--  Ideas for getting a toggle switch obtained from https://www.w3schools.com/howto/howto_css_switch.asp-->
-               <label for="toggle"> Click me to toggle night mode </label>
-               <label class="switch">
-               <input id="toggle" type="checkbox" onclick="toggleNightMode()">
-               <span class="slider round"></span></label>
-            </div>
+            <br>
+            <br>
+            <br>
+            <!--  Ideas for getting a toggle switch obtained from https://www.w3schools.com/howto/howto_css_switch.asp-->
+            <label for="toggle"> Click me to toggle night mode </label>
+            <label class="switch">
+            <input id="toggle" type="checkbox" onclick="toggleNightMode()">
+            <span class="slider round"></span></label>
             <br><br>
-          </div>
-            <!--             http://eonasdan.github.io/bootstrap-datetimepicker/#bootstrap-3-datepicker-v4-docs-->
-<!--
+         </div>
+         <!--  Code to add translation feature to website obtained from https://translate.google.com/manager/website/-->
+         <div id="google_translate_element">
             <script type="text/javascript">
-               $(function () {
-                   $('#datePicker').datetimepicker({
-                       format: 'L',
-                       format: 'DD/MM/YYYY'
-                   });
-               });
-            </script>
-                         https://weareoutman.github.io/clockpicker/
-            <script type="text/javascript">
-               $('.clockpicker').clockpicker({
-                   placement: 'top',
-                   align: 'left',
-                   autoclose: true,
-                   'default': 'now'
-               });
-            </script>
--->
+               function googleTranslateElementInit() {
+                 new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
+               }
+            </script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+            <br>
          </div>
       </div>
+          <br><br>
+      <footer class="footer">
+         <p>Emma Byrne, Wen-Ting Chang, Ian Fuchs, Willie Delaney </p>
+      </footer>
    </body>
 </html>

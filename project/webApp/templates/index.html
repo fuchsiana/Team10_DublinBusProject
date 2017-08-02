@@ -28,9 +28,9 @@
                <a class="navbar-brand" href="#"><img src="/static/LogoNavBar.JPG" width="30" height="30" class="d-inline-block align-left" align="left" alt="">      Dublin bus travel time predictor</a>
             </div>
             <ul class="nav navbar-nav">
-               <li class="active"><a href="/templates/index.html">Home</a></li>
-               <li><a href="/templates/fareInfo.html">Fares</a></li>
-               <li><a href="/templates/generalInformation.html">General information</a></li>
+               <li class="active"><a href="{{ url_for('index') }}">Home</a></li>
+               <li><a href="{{ url_for('fareInfo') }}">Fares</a></li>
+               <li><a href="{{ url_for('generalInfo') }}">General information</a></li>
             </ul>
          </div>
       </nav>

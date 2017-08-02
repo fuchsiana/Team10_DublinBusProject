@@ -24,6 +24,14 @@ global DIRECTION
 def index():
     return render_template('index.html')
 
+@app.route("/fareInfo", methods=["GET"])
+def fareInfo():
+    return render_template('fareInfo.html')
+
+@app.route("/generalInfo", methods=["GET"])
+def generalInfo():
+    return render_template('generalInformation.html')
+
 
 @app.route('/test', methods=['POST'])
 def test():

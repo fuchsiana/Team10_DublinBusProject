@@ -139,7 +139,7 @@ $(function() {
 
 $(function() {
 	$('.clockpicker').clockpicker({
-		placement: 'bottom',
+		placement: 'top',
 		align: 'left',
 		autoclose: true,
 		'default': 'now'

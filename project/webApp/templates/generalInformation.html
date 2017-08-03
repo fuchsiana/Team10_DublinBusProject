@@ -18,8 +18,8 @@
       <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/clockpicker/0.0.7/bootstrap-clockpicker.min.css" />
       <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
    </head>
-    <body>
-        <nav class="navbar navbar-inverse bg-inverse">
+   <body>
+      <nav class="navbar navbar-inverse bg-inverse">
          <div class="container-fluid">
             <div class="navbar-header">
                <a class="navbar-brand" href="#"><img src="/static/LogoNavBar.JPG" width="30" height="30" class="d-inline-block align-left" align="left" alt="">      Dublin bus travel time predictor</a>
@@ -34,33 +34,105 @@
       <div class="pic"></div>
       <br>
       <div class="container">
-          <div class="row">
-          <p style="font-size:16px">
-Bus Átha Cliath-Dublin Bus, a designated activity company, limited by shares, registered in Ireland at 59 Upper O’Connell St, Dublin 1. No 119569 was founded in 1987 and is a wholly owned subsidiary of the state-owned Córas Iompar Eireann Group. They operate the Public Service Obligation network in the Greater Dublin Area under a contract of services with the National Transport Authority. Our network covers a region from Newcastle in County Wicklow to the south, Balbriggan in north County Dublin and Maynooth in County Kildare to the west.<br><br>
-
-In 2015 they carried 122 million customers on their extensive range of services - Cross City, Radial, Orbital, DART Feeder, Airlink, express limited stop commuter services, Nitelink, and Sightseeing tours.<br><br>
-
-              Dublin Bus employs 3,400 people from 68 different countries. Their 2,500 drivers operate a fleet of 950 buses which are all low-floor wheelchair accessible and fully Wi-Fi enabled. </p><br>
-       
-              <h4> Follow Team 10 on Twitter or Tweet to us! </h4>
-                     <a href="https://twitter.com/Team1010_DubBus" class="twitter-follow-button" data-show-count="false">Follow @Team1010_DubBus</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-                     <a href="https://twitter.com/intent/tweet?screen_name=Team1010_DubBus" class="twitter-mention-button" data-show-count="false">Tweet to @Team1010_DubBus</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+         <div class="row">
+             <div class="col-sm-4" style="font-size:16px">
+            <h4> Follow Team 10 on Twitter or Tweet to us! </h4>
+            <a href="https://twitter.com/Team1010_DubBus" class="twitter-follow-button" data-show-count="false">Follow @Team1010_DubBus</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+            <a href="https://twitter.com/intent/tweet?screen_name=Team1010_DubBus" class="twitter-mention-button" data-show-count="false">Tweet to @Team1010_DubBus</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+             </div>
             
-              <br><br>
-            
-          
-          <a href="https://dodublin.ie/" class="btn btn-success">For tourist information click here</a>
-          <a href="https://www.dublinbus.ie/Your-Journey1/Timetables/Airport-Services/" class="btn btn-info">For airport services click here</a>        
-  
-          
-              
-        </div>
-        </div>
-       
-        
-        <br><br>
+             <div class="col-sm-2">
+                 <br>
+             <!--  Code to add translation feature to website obtained from https://translate.google.com/manager/website/-->
+                  <div id="google_translate_element">
+                     <script type="text/javascript">
+                        function googleTranslateElementInit() {
+                          new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
+                        }
+                     </script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+                  </div>
+             </div>
+             <div class="col-sm-3" style="text-align: center">
+                  <!--  Ideas for getting a toggle switch obtained from https://www.w3schools.com/howto/howto_css_switch.asp-->
+                  <label for="toggle" style="font-size:14px; text-align:left"> Click me to toggle night mode </label>
+                  <label class="switch">
+                  <input id="toggle" type="checkbox" onclick="toggleNightMode()">
+                  <span class="slider round"></span></label>
+               </div>
+         </div>
+         <div class="row">
+            <div class="col-md-4">
+               <a class="twitter-timeline" data-width="500" data-height="500" href="https://twitter.com/dublinbusnews">Tweets by dublinbusnews</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+            </div>
+            <div class="col-md-4">
+               <a class="twitter-timeline" data-width="500" data-height="500" href="https://twitter.com/Luas">Tweets by Luas</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+            </div>
+            <div class="col-md-4">
+               <a class="twitter-timeline" data-width="500" data-height="500" href="https://twitter.com/IrishRail">Tweets by IrishRail</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+            </div>
+         </div>
+          <br>
+         <div class="row">
+            <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#eventInfo">Click to find event information</button>
+            <button type="button" class="btn btn-danger" data-toggle="collapse" data-target="#diversions">Click here to view diversion information</button>
+            <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#airportInfo">Click for airport services</button>
+            <a href="https://dodublin.ie/" class="btn btn-success">For tourist information click here</a>
+         </div>
+         <br>
+         <div class="row">
+            <div id="eventInfo" class="collapse">
+               <div class="col-md-12"><br><iframe src="https://www.dublinbus.ie/Bus-it-to-Events/" width="100%" height="600">
+                  </iframe>
+               </div>
+            </div>
+         </div>
+         <div id="diversions" class="collapse">
+            <h3>Diversion on Routes 4, 7, 45a, 46a, 59, 63 and 75</h3>
+            <h4>
+               Published on Thursday, July 27, 2017 
+            </h4>
+            We wish to advise customers that due to the DLR Bay 10k Road Race, Routes 4, 7, 45a, 46a, 59, 63 and 75 will have the below diversions in place from 10.00 to 13.00 on Monday 7 August.
+            <h4>Route 4 From City Centre</h4>
+            Buses are operating to and from the old terminus at Stradbrook/ Abbey Road.
+            <h4>Route 7/a From City Centre</h4>
+            At Temple Hill buses will divert right via Stradbrook Road towards Abbey Road Roundabout, Bakers Corner, Rochestown Avenue, Sallynoggin Road, Pearse Street and back on to normal route.
+            Route 7/a From Brides Glen Luas Stop
+            Normal route to Sallynoggin Church, Pearse Street, then via Sallynoggin Road, Rochestown Avenue, Bakers Corner, Abbey Road, Stradbrook Road, Temple Hill and back on to normal route. 
+            <h4>Route 45a Towards Dun Laoghaire</h4>
+            Normal route to Rochestown Avenue, Bakers Corner, Abbey Road and terminate at last stop before roundabout.
+            Route 45a Towards Ballywaltrim
+            From roundabout at Abbey Road via Bakers Corner, Rochestown Avenue and back on to normal route. 
+            <h4>Routes 46a, 63 and 75 Towards Dun Laoghaire</h4>
+            Normal route to Bakers Corner, left to Abbey Road and terminate at last stop before Abbey Road Roundabout.
+            Routes 46a, 63 and 75 From Dun Laoghaire 
+            From roundabout at Abbey Road via Bakers Corner, Kill Avenue and back on to normal route. 
+            <h4>Route 59 to and from Mackintosh Park</h4>
+            From roundabout at Abbey Road via Bakers Corner, Kill Avenue and back on to normal route.
+         </div>
+         <div class="row">
+            <div id="touristInfo" class="collapse">
+               <div class="col-md-12"><br><iframe src="https://dodublin.ie/" width="100%" height="600">
+                  </iframe>
+               </div>
+            </div>
+         </div>
+         <div class="row">
+            <div id="airportInfo" class="collapse">
+               <div class="col-md-12"><br><iframe src="https://www.dublinbus.ie/Your-Journey1/Timetables/Airport-Services/" width="100%" height="600">
+                  </iframe>
+               </div>
+            </div>
+         </div>
+      </div>
+      <br><br>
       <footer class="footer">
          <p>Emma Byrne, Wen-Ting Chang, Ian Fuchs, Willie Delaney </p>
       </footer>
-    </body>
+   </body>
 </html>
+<!--
+   <p> Bus Átha Cliath-Dublin Bus, a designated activity company, limited by shares, registered in Ireland at 59 Upper O’Connell St, Dublin 1. No 119569 was founded in 1987 and is a wholly owned subsidiary of the state-owned Córas Iompar Eireann Group. They operate the Public Service Obligation network in the Greater Dublin Area under a contract of services with the National Transport Authority. Our network covers a region from Newcastle in County Wicklow to the south, Balbriggan in north County Dublin and Maynooth in County Kildare to the west.<br><br>
+   
+   In 2015 they carried 122 million customers on their extensive range of services - Cross City, Radial, Orbital, DART Feeder, Airlink, express limited stop commuter services, Nitelink, and Sightseeing tours.<br><br>
+   
+                 Dublin Bus employs 3,400 people from 68 different countries. Their 2,500 drivers operate a fleet of 950 buses which are all low-floor wheelchair accessible and fully Wi-Fi enabled. </p><br>-->

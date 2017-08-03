@@ -1,155 +1,86 @@
-<!-- <!DOCTYPE html>
-<html>
-  <head>
-    <title>Geocoding service</title>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <meta charset="utf-8">
-    <style>
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-      #map {
-        height: 100%;
-      }
-      /* Optional: Makes the sample page fill the window. */
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-      #floating-panel {
-        position: absolute;
-        top: 10px;
-        left: 25%;
-        z-index: 5;
-        background-color: #fff;
-        padding: 5px;
-        border: 1px solid #999;
-        text-align: center;
-        font-family: 'Roboto','sans-serif';
-        line-height: 30px;
-        padding-left: 10px;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="floating-panel">
-      <input id="address" type="textbox" value="Sydney, NSW">
-      <input id="submit" type="button" value="Geocode">
-    </div>
-    <div id="map"></div>
-    <script>
-      function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 8,
-          center: {lat: -34.397, lng: 150.644}
-        });
-        var geocoder = new google.maps.Geocoder();
-
-        document.getElementById('submit').addEventListener('click', function() {
-          geocodeAddress(geocoder, map);
-        });
-      }
-
-      function geocodeAddress(geocoder, resultsMap) {
-        var address = document.getElementById('address').value;
-        geocoder.geocode({'address': address}, function(results, status) {
-          if (status === 'OK') {
-            resultsMap.setCenter(results[0].geometry.location);
-            var marker = new google.maps.Marker({
-              map: resultsMap,
-              position: results[0].geometry.location
-            });
-          } else {
-            alert('Geocode was not successful for the following reason: ' + status);
-          }
-        });
-      }
-    </script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlWdso5n60j97uMVDtQDSDQb9AxgYcEhU&callback=initMap">
-    </script>
-  </body>
-</html>
-
--->
-<!--
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <meta charset="utf-8">
-    <title>Simple Polylines</title>
-    <style>
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-      #map {
-        height: 100%;
-      }
-      /* Optional: Makes the sample page fill the window. */
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="map"></div>
+<html lang="en">
+   <head>
+       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    </head>
+    <body>
+    
     <script>
+        var xmlhttp = new XMLHttpRequest();
+var url = "http://data.dublinked.ie/cgi-bin/rtpi/realtimebusinformation?stopid=1111&format=json";
 
-      // This example creates a 2-pixel-wide red polyline showing the path of William
-      // Kingsford Smith's first trans-Pacific flight between Oakland, CA, and
-      // Brisbane, Australia.
-
-      function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 3,
-          center: {lat: 53.3438, lng: 6.2546},
-          mapTypeId: 'terrain'
-        });
-         
-
-        var flightPlanCoordinates = [
-          {lat: 53.3438, lng: 6.2546},
-          {lat: 53.3053, lng: 6.2207},
-            {lat: -18.142, lng: 178.431},
-          {lat: -27.467, lng: 153.027}
-        ];
-        var flightPath = new google.maps.Polyline({
-          path: flightPlanCoordinates,
-          geodesic: true,
-          strokeColor: 'red',
-          strokeOpacity: 1.0,
-          strokeWeight: 3
-        });
-
-        flightPath.setMap(map);
-      }
-    </script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlWdso5n60j97uMVDtQDSDQb9AxgYcEhU&callback=initMap">
-    </script>
-  </body>
+xmlhttp.onreadystatechange = function() {
+    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+        
+        //Parse the JSON data to a JavaScript variable. 
+        parsedObj = JSON.parse(xmlhttp.responseText);
+}
+};
+ xmlhttp.open("GET", url, true);
+xmlhttp.send();
+        
+        
+        
+        function getInfo() {
+            var list = parsedObj.list;
+            console.log(list);
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+//        function getInfo() {
+//        $.getJSON("http://data.dublinked.ie/cgi-bin/rtpi/realtimebusinformation?stopid=1111&format=json", function(data) {
+////            var stations = data.stations;
+//            var route = data.results[0].route;
+//            console.log(route);
+////            _.forEach(stations, function(station) {
+////                var obj = JSON.parse(stations);
+////                console.log(obj);
+//                
+//                
+//                
+//            })
+//        }
+        
+//        $(document).ready(function() {
+//	// Automatically trigger DayNight_Mode()
+//	getInfo();
+//});
+        
+        
+//        function getLiveWeather() {
+//	//call weather API from openweathermap - https://openweathermap.org/current and https://openweathermap.org/weather-conditions
+//	var weatherdata;
+//	$.getJSON('http://api.openweathermap.org/data/2.5/weather?q=dublin,ie&units=metric&appid=9ce0d37e8c0ceb69395465d3d9ea6594', function(data) {
+//		var currentWeather = data.weather[0].description;
+//		var current_temp = data.main.temp;
+//		var wind_speed = data.wind.speed;
+//        // Make first letter of currentWeather uppercase
+//        var currentWeatherFirstLetterUppercase = currentWeather.charAt(0).toUpperCase() + currentWeather.slice(1);
+//		var icon = ("<img src='http://openweathermap.org/img/w/" + data.weather[0].icon + ".png'>");
+//		document.getElementById("weather").innerHTML = "The current temperature is: " + current_temp + " &#8451 <br> Windspeeds of: " + wind_speed + " m/s <br> Overall: " + currentWeatherFirstLetterUppercase + icon;
+//	})
+//}
+        </script>
+    
+        
+        View console
+    
+    
+    
+    </body>
 </html>
--->
-
-
-
-{% extends "index.html" %}
-{% block array %}
-
-
-<div class="col-xs-6">
-                  <label for="day">Select a day of the week</label>
-                  <select class="form-control" name="day" id="day">
-<!--                      https://stackoverflow.com/questions/42469800/select-from-dropdown-list-in-flask  -->
-                      {% for x in myArray %}
-<option value="{{ x }}"{% if loop.first %} SELECTED{% endif %}>{{ x }}</option>
-{% endfor %}
-                  </select>
-               </div>
-<br><br>
-
-
-
-{% endblock %}

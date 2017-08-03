@@ -61,7 +61,7 @@ body, html {
     background-image: url(Busses.png);
     background-size: cover;
     background-repeat: no-repeat;
-    background-position: left;
+    background-position: center;
     height: 45%; 
 }
 

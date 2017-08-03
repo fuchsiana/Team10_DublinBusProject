@@ -9,7 +9,7 @@ setup(name='dublin_bus_travel_predictor',
       packages = ['web_app'],
       entry_points = {
           'console_scripts': [
-              'run=webApp.run:app.run'
+              'run=webApp.run'
             ]
           }
       )

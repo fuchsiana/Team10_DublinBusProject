@@ -67,8 +67,25 @@ function getStops() {
 
 	function updateStopSettings() {
 		var jqxhr = $.getJSON("http://127.0.0.1:5000/stops?direction=" + direction.val(), null, function(data) {
+            origin.empty();
+            destination.empty();            
+            
+            // Populate the first option in origin with "Select origin" - this will be disabled and won't be able to be selected
+				origin.append($('<option>', {
+					value: "",
+					text: "Select direction"
+				}, '</option>'));
+				document.getElementById("direction").options[0].disabled = true;
+            
+            // Populate the first option in destiation with "Select destination" - this will be disabled and won't be able to be selected
+				destination.append($('<option>', {
+					value: "",
+					text: "Select direction"
+				}, '</option>'));
+				document.getElementById("direction").options[0].disabled = true;
+            
+            
 			// Populate the origin stops
-			origin.empty();
 			$.each(data.originStops, function(originStops, value) {
 				origin.append($('<option>', {
 					value: value,
@@ -76,7 +93,6 @@ function getStops() {
 				}, '</option>'));
 			});
 			// Populate destination stops
-			destination.empty();
 			$.each(data.originStops, function(originStops, value) {
 				destination.append($('<option>', {
 					value: value,
@@ -144,9 +160,23 @@ $(function() {
 		placement: 'top',
 		align: 'left',
 		autoclose: true,
-		'default': 'now'
+		'default': 'now',
 	});
 });
+
+
+// Function to ensure time selected is correct
+function checkTime(){
+    var time = $('#clockPicker');
+    console.log(time.val().length);
+    if (time.val() < '06:00' || time.val() > '23:55') {
+        console.log("Pick a different time");
+        alert("Busses only operate betwen 6am and 11.30pm, please select a time within that range :)");
+        // Resets the value of clockPicker so that an incorrect time can't be inputted - https://stackoverflow.com/questions/11755080/jquery-clear-input-default-value
+        $('#clockPicker').val("");
+        
+    }
+}
 
 
 $(document).ready(function() {
@@ -154,8 +184,8 @@ $(document).ready(function() {
 	DayNight_Mode();
 });
 
-// Code to get autocomplete suggestions working adapted from https://jqueryui.com/autocomplete/ and https://stackoverflow.com/questions/9569146/jquery-ui-autocomplete-how-to-trigger-an-event-when-an-item-is-selected
 
+// Code to get autocomplete suggestions working adapted from https://jqueryui.com/autocomplete/ and https://stackoverflow.com/questions/9569146/jquery-ui-autocomplete-how-to-trigger-an-event-when-an-item-is-selected
 var availableRoutes = ['1', '4', '7', '8', '9', '11', '13', '14', '15', '16', '17', '18', '25', '26', '27', '31', '32', '33', '37', '38', '39', '40', '41', '42', '43', '44', '46', '47', '49', '53', '59', '61', '63', '65', '66', '67', '68', '69', '70', '75', '76', '79', '7B', '7D', '83', '84', '86', '102', '104', '111', '114', '116', '118', '120', '122', '123', '130', '140', '142', '145', '14C', '150', '151', '15A', '15B', '161', '16C', '17A', '184', '185', '220', '236', '238', '239', '25A', '25B', '25X', '270', '27A', '27B', '27X', '29A', '31A', '31B', '32X', '332', '33A', '33B', '33X', '38A', '38B', '39A', '40B', '40D', '41A', '41B', '41C', '41X', '44B', '45A', '46A', '46E', '51D', '51X', '54A', '56A', '65B', '66A', '66B', '66X', '67X', '68A', '69X', '747', '76A', '77A', '79A', '83A', '84A', '84X']
 
 $(function() {

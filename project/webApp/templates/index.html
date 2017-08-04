@@ -43,15 +43,15 @@
                <div class="col-sm-6">
                   <!--  Ideas for Bootstrap form adapted from https://www.w3schools.com/bootstrap/bootstrap_forms.asp  -->
                   <!--  Below indicates the input form for selecting route, stops, time and date  -->
-                  <form method="post" action="{{ url_for('test') }}">
+                  <form method="post" action="{{ url_for('test') }}" id="submitForm">
                      <div class="form-group row">
                         <div class="col-xs-6">
                            <label for="route">Pick your bus route</label> 
-                           <input class="form-control route" name="route" placeholder="Enter route" type="text" id="route" method="GET" oninput="getDirection()">
+                           <input required class="form-control route" name="route" placeholder="Enter route" type="text" id="route" method="GET" oninput="getDirection()">
                         </div>
                         <div class="col-xs-6">
                            <label for="direction">Direction</label> 
-                           <select class="form-control" name="direction" id="direction" onchange="getStops()">
+                           <select required class="form-control" name="direction" id="direction" onchange="getStops()">
                               <option value="" disabled selected>Select direction</option>
                            </select>
                         </div>
@@ -61,7 +61,7 @@
                            <label for="day">Select your date</label>
                            <!-- Code for datepicker adapted from http://eonasdan.github.io/bootstrap-datetimepicker/#bootstrap-3-datepicker-v4-docs  -->
                            <div class='input-group date' id="datePicker">
-                              <input type='text' class="form-control" id="date" name="date"  placeholder="Select a date"/>
+                              <input required type='text' class="form-control" id="date" name="date"  placeholder="Select a date"/>
                               <span class="input-group-addon">
                               <span class="glyphicon glyphicon-calendar"></span>
                               </span>
@@ -70,8 +70,8 @@
                         <div class="col-xs-6">
                            <label for="time"> Select the time of day</label>
                            <!--  Code for clockpicker adapted from https://weareoutman.github.io/clockpicker/-->
-                           <div class="input-group clockpicker" id="clockPicker">
-                              <input type="text" class="form-control" name="time" id="time" placeholder="Select the time"/>
+                           <div class="input-group clockpicker">
+                              <input required type="text" class="form-control" id="clockPicker" name="time" id="time" placeholder="Select the time" onchange="checkTime()"/>
                               <span class="input-group-addon">
                               <span class="glyphicon glyphicon-time"></span>
                               </span>
@@ -81,13 +81,13 @@
                      <div class="form-group row">
                         <div class="col-xs-6">
                            <label for="origin">Origin Stop</label> 
-                           <select class="form-control" name="origin" id="origin">
+                           <select required class="form-control" name="origin" id="origin">
                               <option value="" disabled selected>Select an origin stop</option>
                            </select>
                         </div>
                         <div class="col-xs-6">
                            <label for="destination">Destination Stop</label> 
-                           <select class="form-control" name="destination" id="destination">
+                           <select required class="form-control" name="destination" id="destination">
                               <option value="" disabled selected>Select a destination stop</option>
                            </select>
                         </div>

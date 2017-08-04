@@ -3,13 +3,10 @@ Created on 27 July 2017
 
 @author: EByrn
 '''
-import sys
-sys.path.append("C:/Users/EByrn/workspace/team1010/Team-10")
+#import sys
+#sys.path.append("C:/Users/EByrn/workspace/team1010/Team-10")
 import unittest
-from project import webApp
-from webApp import create_table
-import root
-import root.nested.tests
+from create_table import make_table
 
 def t2(x,y):
     if x > y:

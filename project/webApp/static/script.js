@@ -129,11 +129,13 @@ function toggleNightMode() {
 
 
 // Code for datePicker adapted from http://eonasdan.github.io/bootstrap-datetimepicker/#bootstrap-3-datepicker-v4-docs
-// Code for clockpicker adapted from https://weareoutman.github.io/clockpicker/
+// Disabling dates idea adapted from https://stackoverflow.com/questions/42974011/disable-future-dates-in-bootstrap-3-datetimepicker
+// Code for clockpicker adapted from https://weareoutman.github.io/clockpicker/  
 $(function() {
 	$('#datePicker').datetimepicker({
 		format: 'L',
 		format: 'DD/MM/YYYY',
+        maxDate: moment().add(7, 'days')
 	});
 });
 
@@ -161,8 +163,8 @@ $(function() {
       source: availableRoutes,
       select: function(event, ui) {
         // Calls the getDirection() function when the user clicks on something from the autocomplete menu - not sure if this is a good idea as could
-        // delay user getting the direction information but adds rediundancy if the user clicks something after the eventlistener has already
-        // gathered the directions
+        // delay user getting the direction information but adds redundancy if the user clicks something after the eventlistener has already
+        // gathered the directions for a different stop
         getDirection();
     }
     });

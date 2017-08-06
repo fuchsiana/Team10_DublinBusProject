@@ -6,10 +6,11 @@ Created on 20 Jun 2017
 # Make sure you install sql alchemy and pymysql to run these. Just use pip install to do so
 # This is the main flask app, run the run.py file to run the code
 
-from webApp import app
+#from webApp import app
 from flask import Flask, flash, render_template, request, abort, jsonify
-from webApp.Connect_DB import connect_db
-import webApp.get_predictive_time as gpt
+from flask_cors import CORS, cross_origin
+from Connect_DB import connect_db
+import get_predictive_time as gpt
 import json
 import time
 from datetime import datetime
@@ -19,6 +20,9 @@ import pickle
 # Global variable
 global ROUTE
 global DIRECTION
+
+app = Flask(__name__)
+CORS(app) # This is to get the real time api connecting
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
@@ -118,3 +122,8 @@ def stops():
     output['originStops'] = originStops
     #output['destinationStops'] = destinationStops
     return jsonify(output)
+
+
+if __name__ == "__main__":
+    app.debug = True
+    app.run()

@@ -1,5 +1,5 @@
 from flask import Flask, flash, render_template, request, abort
-from webApp.Connect_DB import connect_db
+from Connect_DB import connect_db
 import requests
 import json
 import pickle

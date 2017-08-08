@@ -58,9 +58,12 @@
                <input id="toggle" type="checkbox" onclick="toggleNightMode()">
                <span class="slider round"></span></label>
             </div>
+             <div class="col-sm-2">
+             <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#twitter">Click to hide Twitter feeds</button>
+             </div>
          </div>
           <br>
-         <div class="row">
+         <div class="collapse in row" id="twitter">
             <div class="col-md-4">
                <a class="twitter-timeline" data-width="500" data-height="500" href="https://twitter.com/dublinbusnews">Tweets by dublinbusnews</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
             </div>

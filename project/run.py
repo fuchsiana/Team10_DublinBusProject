@@ -1,3 +1,3 @@
-# from webApp import app
-# app.debug = True
-# app.run()
+from webApp import app
+app.debug = True
+app.run()

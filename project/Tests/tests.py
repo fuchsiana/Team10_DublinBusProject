@@ -39,6 +39,15 @@ class Test(unittest.TestCase):
     # Test creating and populating tables
     def test_make_table_and_write_to_table(self):
         self.assertEqual(make_table_and_write_to_table(), ['46A', 'Monday', 1.0, 10.0])
+        
+    def test_readFile(self):
+        """ This will test if files are being read and parsed correctly """
+        line = "Team1010"
+        with open('testingReadFile.txt', 'r') as f:
+            first_line = f.readline()
+            values = first_line.strip().split()
+            x = values[0]
+        self.assertEqual(line, x)
     
     
 if __name__ == "__main__":

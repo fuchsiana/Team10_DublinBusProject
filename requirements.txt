@@ -1,0 +1,13 @@
+geopy==1.11.0
+feather_format==0.4.0
+Flask_Testing==0.6.2
+Flask_Cors==3.0.3
+SQLAlchemy==1.1.12
+Flask==0.12.2
+numpy==1.13.1
+pandas==0.20.3
+requests==2.18.3
+setuptools==36.2.7
+statsmodels==0.8.0
+feather==0.9.1dev
+scikit_learn==0.19b2

@@ -154,14 +154,18 @@ $(function() {
 	$('#datePicker').datetimepicker({
 		format: 'L',
 		format: 'DD/MM/YYYY',
-		maxDate: moment().add(7, 'days')
+        maxDate: moment().add(7, 'days'),
+        widgetPositioning: {
+            horizontal: 'left',
+            vertical: 'bottom'
+        }
 	});
 });
 
 $(function() {
 	$('.clockpicker').clockpicker({
-		placement: 'top',
-		align: 'left',
+		placement: 'bottom',
+		align: 'right',
 		autoclose: true,
 		'default': 'now',
 	});
@@ -198,3 +202,15 @@ $(function() {
 		}
 	});
 });
+
+
+// https://stackoverflow.com/questions/28620819/how-to-change-button-text-on-click-using-javascript
+function changeButton() {
+    var elem = document.getElementById("myButton1");
+    if (elem.innerHTML == "Click to hide Twitter feeds") {
+        elem.innerHTML = "Click to show Twitter feeds";
+    }
+    else {
+        elem.innerHTML = "Click to hide Twitter feeds";
+    }
+}

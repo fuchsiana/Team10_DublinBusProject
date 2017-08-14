@@ -20,6 +20,11 @@ function getDirection() {
 
 		function updateDirectionSettings() {
 			var jqxhr = $.getJSON("http://127.0.0.1:5000/direction?route=" + route.val(), null, function(data) {
+                console.log(data.selectDirection.length);
+                if (data.selectDirection.length == 0) {
+                    alert("You have not chosen a correct route, please try again");
+                    $('#route').val("");
+                }
 				direction.empty();
 				// Populate the first option in direction with "Select direction" - this will be disabled and won't be able to be selected
 				direction.append($('<option>', {

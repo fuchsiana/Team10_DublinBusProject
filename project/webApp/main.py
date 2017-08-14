@@ -37,8 +37,7 @@ def generalInfo():
 @app.route('/test', methods=['POST'])
 def test():
     ''' Test function to get time predictions from db '''
-    engine = connect_db('team1010.cnmhll8wqxlt.us-west-2.rds.amazonaws.com', '3306', 'DBus', 'Team1010_User',
-                        'password.txt')
+    engine = connect_db('137.43.49.45', '3306', 'DBus', 'remoteuser', 'password2.txt')
     req = {}
     req['route'] = ROUTE
     req['direction'] = DIRECTION
@@ -69,8 +68,7 @@ def direction():
     global ROUTE
 
     ROUTE = request.args.get('route').zfill(4)
-    engine = connect_db('team1010.cnmhll8wqxlt.us-west-2.rds.amazonaws.com', '3306', 'DBus', 'Team1010_User',
-                        'password.txt')
+    engine = connect_db('csi6220-4-vm3.ucd.ie', '3306', 'DBus', 'remoteuser', 'password2.txt')
 
     # Get the direction
     sql = "SELECT trip_headsign FROM routes WHERE route_short_name = %s;"
@@ -94,8 +92,7 @@ def stops():
     ''' This function gets the corresponding stops for the direction along the chosen route '''
     DIRECTION = request.args.get('direction')
 
-    engine = connect_db('team1010.cnmhll8wqxlt.us-west-2.rds.amazonaws.com', '3306', 'DBus', 'Team1010_User',
-                        'password.txt')
+    engine = connect_db('137.43.49.45', '3306', 'DBus', 'remoteuser', 'password2.txt')
     # Get origin stops - dividing this section into origin and destination stops may not be necessary
     # as the stops for origin and destination will be the same for that route
     #sql = "SELECT origin FROM TestTable where route = %s order by origin asc;"

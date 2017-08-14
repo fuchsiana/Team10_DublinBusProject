@@ -25,7 +25,7 @@
       <nav class="navbar navbar-inverse bg-inverse">
          <div class="container-fluid">
             <div class="navbar-header">
-               <a class="navbar-brand" href="#"><img src="/static/LogoNavBar.JPG" width="30" height="30" class="d-inline-block align-left" align="left" alt="">      Dublin bus travel time predictor</a>
+               <a class="navbar-brand" href="#"><img src="/static/LogoNavBar.JPG" width="30" height="30" class="d-inline-block align-left" align="left" alt=""> Dublin bus travel time predictor</a>
             </div>
             <ul class="nav navbar-nav">
                <li class="active"><a href="{{ url_for('index') }}">Home</a></li>
@@ -40,7 +40,7 @@
       <div class="container">
          <div class="container2">
             <div class="row">
-               <div class="col-sm-5">
+               <div class="col-sm-6">
                   <!--  Ideas for Bootstrap form adapted from https://www.w3schools.com/bootstrap/bootstrap_forms.asp  -->
                   <!--  Below indicates the input form for selecting route, stops, time and date  -->
                   <form method="post" action="{{ url_for('test') }}" id="submitForm">
@@ -95,7 +95,7 @@
                      <button class="btn btn-default" type="submit">Submit</button>
                   </form>
                </div>
-               <div class="col-sm-5" style="text-align:center">
+               <div class="col-sm-6" style="text-align:center">
                   <h3> Check out the current weather conditions </h3>
                   <p style="font-size:16px" id="weather"></p>
                   <div class="row" style="text-align:center">

@@ -6,16 +6,21 @@ Created on 20 Jun 2017
 # Make sure you install sql alchemy and pymysql to run these. Just use pip install to do so
 # This is the main flask app, run the run.py file to run the code
 
-from webApp import app
+#from webApp import app
 from flask import Flask, flash, render_template, request, abort, jsonify
 from flask_cors import CORS, cross_origin
-from webApp.Connect_DB import connect_db
-import webApp.get_predictive_time as gpt
+from Connect_DB import connect_db
+import get_predictive_time as gpt
 import json
 import time
-from datetime import datetime
+import datetime
 import sys, os
 import pickle
+import numpy as np
+
+app = Flask(__name__)
+CORS(app)
+app.debug = True
 
 # Global variable
 global ROUTE
@@ -34,9 +39,9 @@ def generalInfo():
     return render_template('generalInformation.html')
 
 
-@app.route('/test', methods=['POST'])
-def test():
-    ''' Test function to get time predictions from db '''
+@app.route('/form', methods=['POST'])
+def form():
+    ''' Function to get time predictions from db '''
     engine = connect_db('137.43.49.45', '3306', 'DBus', 'remoteuser', 'password2.txt')
     req = {}
     req['route'] = ROUTE
@@ -45,20 +50,29 @@ def test():
     req['dest_stop_id'] = request.form['destination'].split(', ')[0]
     req['time'] = request.form['time']
     # Idea to split date format dd/mm/yy into day, month and date adapted from https://stackoverflow.com/questions/4056683/python-getting-weekday-from-an-input-date
-    inputDate = time.strftime("%A %Y-%m-%d", time.strptime(request.form['date'], "%d/%m/%Y"))
+    inputDate = time.strftime("%A %d-%m-%Y", time.strptime(request.form['date'], "%d/%m/%Y"))
     req['day'] = inputDate.split()[0]
     req['date'] = inputDate.split()[1]
+
+    print(req)
     # Get prediction timetable
-    predictive_time = gpt.get_predictive_timetable(req)
+    predictive_time_tables, travel_time = gpt.get_predictive_timetable(req)
+    print(predictive_time_tables, travel_time)
+
     # Get stops information from pickle file
     thisPlace = os.path.dirname(os.path.abspath(__file__))
     stopsInfo = os.path.join(thisPlace, 'stops_info.pkl')
     file = open(stopsInfo, 'rb')
-    #file = open('stops_info.pkl', 'rb')
     stops = pickle.load(file)
     file.close()
-    return render_template('form.html', journeyTime=predictive_time[2], origin=req['orig_stop_id'], destination=req['dest_stop_id'],
-                           time=predictive_time[0], day=req['day'], date=req['date'], stops=stops, req=req)
+
+    # Convert travel_time to a cleaner output (HH:MM:SS) - https://stackoverflow.com/questions/775049/python-time-seconds-to-hms
+    convert_travel_time = np.asscalar(np.int16(travel_time))
+    travel_time_formatted = datetime.timedelta(seconds=convert_travel_time)
+    
+    return render_template('form.html', journeyTime=travel_time_formatted, origin=req['orig_stop_id'], destination=req['dest_stop_id'], inputTime=req['time'],
+                           time=predictive_time_tables, day=req['day'], date=req['date'], stops=stops, req=req, timetable=predictive_time_tables, route=req['route'])
+
 
 
 @app.route('/direction', methods=['GET'])
@@ -68,7 +82,7 @@ def direction():
     global ROUTE
 
     ROUTE = request.args.get('route').zfill(4)
-    engine = connect_db('csi6220-4-vm3.ucd.ie', '3306', 'DBus', 'remoteuser', 'password2.txt')
+    engine = connect_db('137.43.49.45', '3306', 'DBus', 'remoteuser', 'password2.txt')
 
     # Get the direction
     sql = "SELECT trip_headsign FROM routes WHERE route_short_name = %s;"
@@ -76,8 +90,7 @@ def direction():
     selectDirection = []
     # rows returns a 2D array
     for i in rows:
-        for j in i:
-            selectDirection.append(j)
+        selectDirection.append(i[0])
     
     output = {}
     output['selectDirection'] = selectDirection
@@ -93,26 +106,18 @@ def stops():
     DIRECTION = request.args.get('direction')
 
     engine = connect_db('137.43.49.45', '3306', 'DBus', 'remoteuser', 'password2.txt')
-    # Get origin stops - dividing this section into origin and destination stops may not be necessary
-    # as the stops for origin and destination will be the same for that route
-    #sql = "SELECT origin FROM TestTable where route = %s order by origin asc;"
+
     sql = """ SELECT stop_id, stop_name FROM routes_stops WHERE route_short_name = %s AND trip_headsign = %s;"""
     rows = engine.execute(sql, ROUTE.zfill(4), DIRECTION).fetchall()
     originStops = []
-    # rows returns a 2D array
     for i in rows:
         originStops.append(i[0] + ", " +i[1])
-            
-    # Get destination stops        
-    #sql2 = "SELECT origin FROM TestTable where route = %s order by destination asc;"
-    #rows2 = engine.execute(sql2, x).fetchall()
-    #destinationStops = []
-    #for i in rows2:
-    #    for j in i:
-    #        destinationStops.append(j)
             
     engine.dispose()    
     output = {}
     output['originStops'] = originStops
-    #output['destinationStops'] = destinationStops
     return jsonify(output)
+
+
+if __name__ == "__main__":
+    app.run()

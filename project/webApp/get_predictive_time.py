@@ -1,22 +1,32 @@
-from flask import Flask, flash, render_template, request, abort
-from webApp.Connect_DB import connect_db
+from Connect_DB import connect_db
+import pandas as pd
+import numpy as np
 import requests
 import json
-import pickle
-import pandas as pd
-import ast
-import time
 import datetime
-from sklearn.linear_model import LogisticRegression
-from sklearn import metrics
-import logging
+import statsmodels as stm
 import statsmodels.formula.api as sm
+from sklearn.feature_selection import VarianceThreshold
+from sklearn import metrics
+from sklearn.linear_model import LinearRegression as LinR
+from sklearn.svm import SVR
+from sklearn.ensemble import GradientBoostingRegressor as GBR
+from sklearn.ensemble import RandomForestRegressor as RFR
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import RandomizedSearchCV as RSCV
+from sklearn.metrics.scorer import make_scorer
+from scipy import stats
+from sklearn.externals import joblib
+from flask import Flask, flash, render_template, request, abort
+from sqlalchemy import create_engine
+import ast
+import logging
+import time
 
-sqla_logger = logging.getLogger('sqlalchemy')
-sqla_logger.propagate = False
+logging.basicConfig()
+logging.getLogger('sqlalchemy').setLevel(logging.ERROR)
 
-import os
-import sys
+
 
 
 # ==================================
@@ -28,13 +38,15 @@ def get_trip_id(req):
     base on the request form from frontend. Input parameter is dict datatype
     which store the form information."""
 
-    engine = connect_db('team1010.cnmhll8wqxlt.us-west-2.rds.amazonaws.com', '3306', 'DBus', 'Team1010_User',
-                        'password.txt')
-
+    # engine = connect_db('team1010.cnmhll8wqxlt.us-west-2.rds.amazonaws.com', '3306', 'DBus', 'Team1010_User', 'DubBus_Team1010')
+    #engine = connect_db('127.0.0.1', '3306', 'DBus', 'root', 'password2.txt')
+    engine = connect_db('137.43.49.45', '3306', 'DBus', 'remoteuser', 'password2.txt')
     sql = """
-        SELECT trip_id FROM routes_stops_service_days
-        WHERE route_short_name = %s AND trip_headsign = %s AND stop_id_orig = %s AND stop_id_dest = %s
-        AND service_day = %s;
+        SELECT DISTINCT rss.trip_id FROM
+        routes_stops_service_days as rss, trip_stops as ts
+        WHERE rss.trip_id = ts.trip_id AND
+        rss.route_short_name = %s AND rss.trip_headsign = %s
+        AND rss.stop_id = %s AND ts.stop_id = %s AND rss.service_day = %s;
         """
     rows = engine.execute(sql, req['route'], req['direction'], req['orig_stop_id'], req['dest_stop_id'],
                           req['day']).fetchall()
@@ -51,12 +63,12 @@ def get_trip_id(req):
 # Get timetable list
 # ==================================
 def get_timetable(trip_id, req):
-    engine = connect_db('team1010.cnmhll8wqxlt.us-west-2.rds.amazonaws.com', '3306', 'DBus', 'Team1010_User',
-                        'password.txt')
 
+    #engine = connect_db('127.0.0.1', '3306', 'DBus', 'root', 'password2.txt')
+    engine = connect_db('137.43.49.45', '3306', 'DBus', 'remoteuser', 'password2.txt')
     sql = """
         SELECT DISTINCT departure_time
-        FROM DBus.routes_timetables
+        FROM routes_timetables
         WHERE trip_id = %s AND service_day = %s;
         """
     rows = engine.execute(sql, trip_id, req['day']).fetchall()
@@ -89,7 +101,7 @@ def get_weather_info(req):
         if date == req['date'] and time <= req_time:
             wind_speed = js['list'][i]['wind']['speed']
             if js['list'][i]['rain'] != {}:
-                rain = js['list'][i]['rain']['3h']
+                rain = js['list'][i]['rain']['3h']/3
             break
 
     return rain, wind_speed
@@ -101,11 +113,10 @@ def get_weather_info(req):
 def get_SSID_array(trip_id, req):
     """ Function return passed by SSID and stops array of origin stop and destinatioin stop. """
 
-    engine = connect_db('team1010.cnmhll8wqxlt.us-west-2.rds.amazonaws.com', '3306', 'DBus', 'Team1010_User',
-                        'password.txt')
-
+    #engine = connect_db('127.0.0.1', '3306', 'DBus', 'root', 'password2.txt')
+    engine = connect_db('137.43.49.45', '3306', 'DBus', 'remoteuser', 'password2.txt')
     sql = """
-        SELECT pass_ssid FROM DBus.routes_ssid_array
+        SELECT pass_ssid FROM routes_ssid_array
         WHERE trip_id = %s AND stop_id = %s; """
 
     row1 = engine.execute(sql, trip_id, req['orig_stop_id']).fetchall()
@@ -122,7 +133,7 @@ def get_SSID_array(trip_id, req):
 # ==================================
 def get_predictive_travel_time(trip_id, req):
     """Function return three accumulate predictive time,
-    (1) start - origin_stop (2) origin_stop - dest_stop (3) start_stop - dest_stop """
+    (1) start - origin_stop (2) origin_stop - dest_stop (3) start_stop - dest_stop (4) travel time array"""
 
     # Get ssid array
     orig_ssid_array, dest_ssid_array = get_SSID_array(trip_id, req)
@@ -135,29 +146,57 @@ def get_predictive_travel_time(trip_id, req):
                           'Day': req['day'], 'HourFrame': int(req['time'].split(':')[0])}, index=[0])
 
     # Get predictive time of each SSID and sum up (unit: sec)
+    # 0808 revised: return travling time of each segment  and arrival time of each stop
     sum_travel_time = 0
     depart_orig_travel_time = 0
     orig_dest_travel_time = 0
+    travel_time_list = []
+    flag = False
 
     for ssid in dest_ssid_array:
-        # Get pickle file - could change to Joblib
-        thisPlace = os.path.dirname(os.path.abspath(__file__))
-        fileName = os.path.join(thisPlace, ssid + '.pkl')
-        #file = open(ssid + '.pkl', 'rb')
-        file = open(fileName, 'rb')
-        model = pickle.load(file)
-        file.close()
 
-        travel_time = model.predict(in_df).values[0]
+        # Prepare dataframe to predict
+        feature = pd.read_csv('SSID_model_features.csv')
+        feature['SSID'] = feature['SSID'].apply(lambda x: str(x).zfill(8))
+        frame = feature[feature.SSID == ssid]
+        frame.dropna(axis=1, how='all', inplace=True)
+        frame.drop(['SSID'], axis=1, inplace=True)
+        frame.reset_index(drop=True, inplace=True)
+        frame.columns = frame.iloc[0]
+        frame.drop(0, axis=0, inplace=True)
+
+        # Change data type
+        set_to_zero = []
+        frame['Rain'] = frame['Rain'].astype('float32')
+        frame['Rain'] = frame['WindSpeed'].astype('float32')
+        frame['JPID_length'] = frame['JPID_length'].astype(str).astype(int)
+        for c in frame.columns:
+            if c.find('HF') != -1 or c.find('Day') != -1 or c.find('SchoolHoliday') != -1:
+                frame[c] = frame[c].apply(lambda x: int(float(x)))
+
+        # Set value for input dataframe
+        frame.set_value(index=1, col='Rain', value=rain)
+        frame.set_value(index=1, col='WindSpeed', value=wind_speed)
+        frame.set_value(index=1, col='HF_' + req['time'].split(':')[0], value=1)
+        frame.set_value(index=1, col='Day_' + req['day'], value=1)
+
+        # Get pickle file
+        model = joblib.load('./SSID_XXXX_model_pkls/' + ssid + '.pkl')
+
+        travel_time = model.predict(frame)[0]
         sum_travel_time += travel_time
 
-        # Got list index out of range error here
+        if flag:
+            travel_time_list.append(travel_time)
+
         if ssid == orig_ssid_array[-1]:
+            flag = True
             depart_orig_travel_time = sum_travel_time
 
     orig_dest_travel_time = sum_travel_time - depart_orig_travel_time
 
-    return depart_orig_travel_time, orig_dest_travel_time, sum_travel_time
+    return depart_orig_travel_time, orig_dest_travel_time, sum_travel_time, travel_time_list
+
 
 
 # ==================================
@@ -180,7 +219,7 @@ def get_predictive_timetable(req):
         depart_times = get_timetable(trip_id, req)
 
         # Get predictive traveling time
-        depart_orig_tt, orig_dest_tt, sum_tt = get_predictive_travel_time(trip_id, req)
+        depart_orig_tt, orig_dest_tt, sum_tt, tt_list = get_predictive_travel_time(trip_id, req)
 
         # Request time: convert to "datetime"
         req_t = datetime.datetime.strptime(req['time'], "%H:%M")
@@ -206,14 +245,22 @@ def get_predictive_timetable(req):
                 break
 
         if actual_depart_t != "":
-            at = (datetime.datetime.strptime(actual_depart_t, "%H:%M:%S") + datetime.timedelta(seconds=depart_orig_tt)).time()
+            at = (
+            datetime.datetime.strptime(actual_depart_t, "%H:%M:%S") + datetime.timedelta(seconds=depart_orig_tt)).time()
             all_orig_time_list.append(at.strftime("%H:%M:%S"))
 
-        # Sort by time pick the cloest time
+        # Sort by time and pick the cloest time
         all_orig_time_list.sort()
-
         predictive_timetable_orig = all_orig_time_list[0]
-        temp = (datetime.datetime.strptime(predictive_timetable_orig, "%H:%M:%S") + datetime.timedelta(seconds=orig_dest_tt)).time()
-        predictive_timetable_dest = temp.strftime("%H:%M:%S")
 
-    return predictive_timetable_orig, predictive_timetable_dest, orig_dest_tt
+        # Get all arrival time of stops passed by
+        predictive_timetable_all = []
+        acc_tt = predictive_timetable_orig
+        predictive_timetable_all.append(acc_tt)
+
+        for tt in tt_list:
+            temp = (datetime.datetime.strptime(acc_tt, "%H:%M:%S") + datetime.timedelta(seconds=tt)).time()
+            acc_tt = temp.strftime("%H:%M:%S")
+            predictive_timetable_all.append(acc_tt)
+
+    return predictive_timetable_all, orig_dest_tt

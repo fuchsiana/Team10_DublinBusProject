@@ -17,9 +17,9 @@
       <link id="pagestyle" rel="stylesheet" type="text/css" href="/static/mainStyle.css">
       <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/clockpicker/0.0.7/bootstrap-clockpicker.min.css" />
       <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+      <link rel="stylesheet" type="text/css" href="/static/style_map.css">
    </head>
    <body onload="getLiveWeather()">
-      <!--   <body>-->
       <!--  Bootstrap ideas adapted from https://www.w3schools.com/bootstrap/default.asp  -->
       <!--  Navigation bar ideas adapted from https://v4-alpha.getbootstrap.com/components/navbar/?#color-schemes-->
       <nav class="navbar navbar-inverse bg-inverse">
@@ -35,126 +35,114 @@
          </div>
       </nav>
       <div class="pic"></div>
-           
-      <br>
-      <div class="container">
-         <div class="container2">
-            <div class="row">
-               <div class="col-sm-6">
-                  <!--  Ideas for Bootstrap form adapted from https://www.w3schools.com/bootstrap/bootstrap_forms.asp  -->
-                  <!--  Below indicates the input form for selecting route, stops, time and date  -->
-                  <form method="post" action="{{ url_for('test') }}" id="submitForm">
-                     <div class="form-group row">
-                        <div class="col-xs-6">
-                           <label for="route">Pick your bus route</label> 
-                           <input required class="form-control route" name="route" placeholder="Enter route" type="text" id="route" method="GET" oninput="getDirection()">
-                        </div>
-                        <div class="col-xs-6">
-                           <label for="direction">Direction</label> 
-                           <select required class="form-control" name="direction" id="direction" onchange="getStops()">
-                              <option value="" disabled selected>Select direction</option>
-                           </select>
-                        </div>
-                     </div>
-                     <div class="form-group row">
-                        <div class="col-xs-6">
-                           <label for="day">Select your date</label>
-                           <!-- Code for datepicker adapted from http://eonasdan.github.io/bootstrap-datetimepicker/#bootstrap-3-datepicker-v4-docs  -->
-                           <div class='input-group date' id="datePicker">
-                              <input required type='text' class="form-control" id="date" name="date"  placeholder="Select a date"/>
-                              <span class="input-group-addon">
-                              <span class="glyphicon glyphicon-calendar"></span>
-                              </span>
+      <div class="mainContainer">
+         <br>
+         <div class="container">
+            <div class="container2">
+               <div class="row">
+                  <div class="col-sm-6">
+                     <!--  Ideas for Bootstrap form adapted from https://www.w3schools.com/bootstrap/bootstrap_forms.asp  -->
+                     <!--  Below indicates the input form for selecting route, stops, time and date  -->
+                     <form method="post" action="{{ url_for('form') }}" id="submitForm">
+                        <div class="form-group row">
+                           <div class="col-xs-6">
+                              <label for="route">Pick your bus route</label> 
+                              <input required class="form-control route" name="route" placeholder="Enter route" type="text" id="route" oninput="getDirection()">
+                           </div>
+                           <div class="col-xs-6">
+                              <label for="direction">Direction</label> 
+                              <select required class="form-control" name="direction" id="direction" onchange="getStops()">
+                                 <option value="" disabled selected>Select direction</option>
+                              </select>
                            </div>
                         </div>
-                        <div class="col-xs-6">
-                           <label for="time"> Select the time of day</label>
-                           <!--  Code for clockpicker adapted from https://weareoutman.github.io/clockpicker/-->
-                           <div class="input-group clockpicker">
-                              <input required type="text" class="form-control" id="clockPicker" name="time" id="time" placeholder="Select the time" onchange="checkTime()"/>
-                              <span class="input-group-addon">
-                              <span class="glyphicon glyphicon-time"></span>
-                              </span>
+                        <div class="form-group row">
+                           <div class="col-xs-6">
+                              <label for="day">Select your date</label>
+                              <!-- Code for datepicker adapted from http://eonasdan.github.io/bootstrap-datetimepicker/#bootstrap-3-datepicker-v4-docs  -->
+                              <div class='input-group date' id="datePicker">
+                                 <input required type='text' class="form-control" id="date" name="date"  placeholder="Select a date"/>
+                                 <span class="input-group-addon">
+                                 <span class="glyphicon glyphicon-calendar"></span>
+                                 </span>
+                              </div>
+                           </div>
+                           <div class="col-xs-6">
+                              <label for="time"> Select the time of day</label>
+                              <!--  Code for clockpicker adapted from https://weareoutman.github.io/clockpicker/  -->
+                              <div class="input-group clockpicker">
+                                 <input required type="text" class="form-control" name="time" id="time" placeholder="Select the time" onchange="checkTime()"/>
+                                 <span class="input-group-addon">
+                                 <span class="glyphicon glyphicon-time"></span>
+                                 </span>
+                              </div>
                            </div>
                         </div>
-                     </div>
-                     <div class="form-group row">
-                        <div class="col-xs-6">
-                           <label for="origin">Origin Stop</label> 
-                           <select required class="form-control" name="origin" id="origin">
-                              <option value="" disabled selected>Select an origin stop</option>
-                           </select>
+                        <div class="form-group row">
+                           <div class="col-xs-6">
+                              <label for="origin">Origin Stop</label> 
+                              <select required class="form-control" name="origin" id="origin">
+                                 <option value="" disabled selected>Select an origin stop</option>
+                              </select>
+                           </div>
+                           <div class="col-xs-6">
+                              <label for="destination">Destination Stop</label> 
+                              <select required class="form-control" name="destination" id="destination">
+                                 <option value="" disabled selected>Select a destination stop</option>
+                              </select>
+                           </div>
                         </div>
-                        <div class="col-xs-6">
-                           <label for="destination">Destination Stop</label> 
-                           <select required class="form-control" name="destination" id="destination">
-                              <option value="" disabled selected>Select a destination stop</option>
-                           </select>
-                        </div>
-                     </div>
-                     <button class="btn btn-default" type="submit">Submit</button>
-                  </form>
-               </div>
-               <div class="col-sm-6" style="text-align:center">
-                  <h3> Check out the current weather conditions </h3>
-                  <p style="font-size:16px" id="weather"></p>
-                  <div class="row" style="text-align:center">
-                     <h3> Did you know? <img src="/static/LightBulb.jpg" alt="LightBulb" width="90px" height="90px" style="text-align: left"> </h3>
-                     <div id="changeText" > Dublin bus travels 57 million kilometers a year making 16,883 trips per week </div>
-                     <script type="text/javascript">
-                        // To change what is being displayed after a certain amount of time - http://stackoverflow.com/questions/6398526/javascript-jquery-or-something-to-change-text-every-some-seconds
-                        var text = ["Over 60 per cent of people spend their time on the bus browsing the internet.", "The Dublin Bus control room helps co-ordinate 110 routes, including 19 high-frequency ones that criss-cross the city", "12% of people use Dublin Bus to get a little bit of extra sleep                      ", "90% of passengers always say thank you to their driver                          ", "Dublin bus travels 57 million kilometers a year making 16,883 trips per week"];
-                        var counter = 0;
-                        var elem = document.getElementById("changeText");
-                        setInterval(change, 6500);
-                        function change() {
-                         elem.innerHTML = text[counter];
-                            counter++;
-                            if(counter >= text.length) { counter = 0; }
-                        }
-                     </script>
+                        <button class="btn btn-default" type="submit">Submit</button>
+                     </form>
                   </div>
+                  <div class="col-sm-6" style="text-align:center">
+                     <h3> Check out the current weather conditions </h3>
+                     <p style="font-size:16px" id="weather"></p>
+                     <div class="row" style="text-align:center">
+                        <h3> Did you know? <img src="/static/LightBulb.jpg" alt="LightBulb" width="90" height="90" style="text-align: left"> </h3>
+                        <div id="changeText" > Dublin bus travels 57 million kilometers a year making 16,883 trips per week </div>
+                        <script type="text/javascript">
+                           // To change what is being displayed after a certain amount of time - http://stackoverflow.com/questions/6398526/javascript-jquery-or-something-to-change-text-every-some-seconds
+                           var text = ["Over 60 per cent of people spend their time on the bus browsing the internet.", "The Dublin Bus control room helps co-ordinate 110 routes, including 19 high-frequency ones that criss-cross the city", "12% of people use Dublin Bus to get a little bit of extra sleep                      ", "90% of passengers always say thank you to their driver                          ", "Dublin bus travels 57 million kilometers a year making 16,883 trips per week"];
+                           var counter = 0;
+                           var elem = document.getElementById("changeText");
+                           setInterval(change, 6500);
+                           function change() {
+                            elem.innerHTML = text[counter];
+                               counter++;
+                               if(counter >= text.length) { counter = 0; }
+                           }
+                        </script>
+                     </div>
+                  </div>
+                  <br><br>
                </div>
                <br><br>
-            </div>
-            <br><br>
-            <div class="row">
-               <div class="col-sm-3">
-                  <!--  Code to add translation feature to website obtained from https://translate.google.com/manager/website/-->
-                  <div id="google_translate_element">
-                     <script type="text/javascript">
-                        function googleTranslateElementInit() {
-                          new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
-                        }
-                     </script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+               <div class="row">
+                  <div class="col-sm-3">
+                     <!--  Code to add translation feature to website obtained from https://translate.google.com/manager/website/-->
+                     <div id="google_translate_element">
+                        <script type="text/javascript">
+                           function googleTranslateElementInit() {
+                             new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
+                           }
+                        </script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+                     </div>
+                  </div>
+                  <div class="col-sm-3" style="text-align: center">
+                     <!--  Ideas for getting a toggle switch obtained from https://www.w3schools.com/howto/howto_css_switch.asp-->
+                     <label for="toggle" style="font-size:15px; text-align:left"> Click me to toggle night mode </label>
+                     <label class="switch">
+                     <input id="toggle" type="checkbox" onclick="toggleNightMode()">
+                     <span class="slider round"></span></label>
                   </div>
                </div>
-               <div class="col-sm-3" style="text-align: center">
-                  <!--  Ideas for getting a toggle switch obtained from https://www.w3schools.com/howto/howto_css_switch.asp-->
-                  <label for="toggle" style="font-size:15px; text-align:left"> Click me to toggle night mode </label>
-                  <label class="switch">
-                  <input id="toggle" type="checkbox" onclick="toggleNightMode()">
-                  <span class="slider round"></span></label>
-               </div>
-               <!--
-                  <div class="col-sm-6">
-                      <h3> Keep track of the road conditions all across the country! </h3>
-                   To input twitter feed on webpage obtained from https://support.twitter.com/articles/20170071
-                  <a class="twitter-timeline" data-width="100%" data-height="240px" data-theme="light" href="https://twitter.com/aaroadwatch">Tweets by aaroadwatch</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-                  <br><br>
-                  <h4> Follow us on Twitter or Tweet to us! </h4>
-                  <a href="https://twitter.com/Team1010_DubBus" class="twitter-follow-button" data-show-count="false">Follow @Team1010_DubBus</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-                  <a href="https://twitter.com/intent/tweet?screen_name=Team1010_DubBus" class="twitter-mention-button" data-show-count="false">Tweet to @Team1010_DubBus</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-                  </div>
-                  -->
             </div>
-            <br>
          </div>
-          {% block form %}{% endblock %}
       </div>
-      <br><br>
+      {% block form %}{% endblock %}
       <footer class="footer">
-         <p>Emma Byrne, Wen-Ting Chang, Ian Fuchs, Willie Delaney </p>
+         <p style="padding:10px"> &copy; Team1010: Emma Byrne, Wen-Ting Chang, Ian Fuchs, Willie Delaney </p>
       </footer>
    </body>
 </html>

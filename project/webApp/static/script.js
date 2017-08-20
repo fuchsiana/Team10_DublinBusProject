@@ -3,12 +3,10 @@
 var delayTimer;
 function getDirection() {
 	// Function to get the directions that the route can go in - then populates the direction dropdown
-	console.log("Getting directions...");
 	clearTimeout(delayTimer);
 	delayTimer = setTimeout(function() {
 		var route = $('#route'),
 			direction = $('#direction');
-		console.log("The route is " + route.val());
 
 		function updateDirection() {
 			// This will update the direction list corresponding to whatever route is typed in
@@ -20,7 +18,6 @@ function getDirection() {
 
 		function updateDirectionSettings() {
 			var jqxhr = $.getJSON("http://127.0.0.1:5000/direction?route=" + route.val(), null, function(data) {
-                console.log(data.selectDirection.length);
                 if (data.selectDirection.length == 0) {
                     alert("You have not chosen a correct route, please try again");
                     $('#route').val("");
@@ -47,24 +44,19 @@ function getDirection() {
 		}
 		// Call function to update the direction dropdown menu
 		updateDirection();
-	}, 2000);
+	}, 1500);
 }
 
 function getStops() {
-	console.log("Functon triggered, getting stops");
 	var origin = $('#origin'),
 		destination = $('#destination'),
 		direction = $('#direction');
-	console.log("The direction is: " + direction.val());
 
 	function updateStops() {
 		// This will update the origin stop list corresponding to whatever route is typed in
 		updateStopSettings();
 	}
-	//function updateDestinationStops() {
-	// This will update the destination stop list corresponding to whatever route is typed in - this may not be necessary in the end - origin and destination will have the same stops so may only need to have one function rather than 2
-	//	updateSettings();
-	//}
+	
 	// Make the selections disabled while fetching new data
 	origin.attr('disabled', true);
 	destination.attr('disabled', true);

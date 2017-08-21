@@ -44,7 +44,7 @@ function getDirection() {
 		}
 		// Call function to update the direction dropdown menu
 		updateDirection();
-	}, 1500);
+	}, 1800);
 }
 
 function getStops() {

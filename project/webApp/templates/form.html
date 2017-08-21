@@ -1,267 +1,324 @@
-{% extends "index.html" %}
-{% block form %}
-
-<br>
-<div class="mainContainer">
-   <div class="container">
-      <div class="row">
-         <div class="col-sm-12" style="padding:25px;">
-            <h4>You want to depart at {{ inputTime }} on {{ day }} the {{ date }} from Stop {{ origin }} to Stop {{ destination }} .</h4>
-            <h4> The total travel time for your journey is: <b>{{ journeyTime }}</b> (HH:MM:SS). </h4>
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <title>Dublin Bus Travel App</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+      <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment-with-locales.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clockpicker/0.0.7/bootstrap-clockpicker.min.js"></script>
+      <script src="/static/jquery-ui.js"></script>
+      <script type="text/javascript" src="/static/script.js"></script> 
+      <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
+      <link id="pagestyle" rel="stylesheet" type="text/css" href="/static/mainStyle.css">
+      <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/clockpicker/0.0.7/bootstrap-clockpicker.min.css" />
+      <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+      <link rel="stylesheet" type="text/css" href="/static/style_map.css">
+   </head>
+   <body>
+      <!--  Bootstrap ideas adapted from https://www.w3schools.com/bootstrap/default.asp  -->
+      <!--  Navigation bar ideas adapted from https://v4-alpha.getbootstrap.com/components/navbar/?#color-schemes-->
+      <nav class="navbar navbar-inverse bg-inverse">
+         <div class="container-fluid">
+            <div class="navbar-header">
+               <a class="navbar-brand" href="#"><img src="/static/LogoNavBar.JPG" width="30" height="30" class="d-inline-block align-left" align="left" alt=""> Dublin bus travel time predictor</a>
+            </div>
+            <ul class="nav navbar-nav">
+               <li><a href="{{ url_for('index') }}">Home</a></li>
+               <li><a href="{{ url_for('fareInfo') }}">Fares</a></li>
+               <li><a href="{{ url_for('generalInfo') }}">General information</a></li>
+            </ul>
          </div>
-      </div>
-      <div class="row">
-         <div class="col-md-12">
-            <div class="containerMap">
-               <div id="map-canvas" style="border:border:2px solid black;">
-                  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-                  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA42LkjmNjm_bQCtgfGfnAIu-yZ9B1aRYU&callback=showMap" type="text/javascript"></script>
+      </nav>
+      <div class="pic"></div>
+      <div class="mainContainer">
+         <div class="container">
+            <div class="row">
+               <div class="col-sm-10" style="padding:25px;">
+                  <h4>You want to depart at {{ inputTime }} on {{ day }} the {{ date }} from Stop {{ origin }} to Stop {{ destination }} .</h4>
+                  <h4> The total travel time for your journey is: <b>{{ journeyTime }}</b> (HH:MM:SS). </h4>
                </div>
             </div>
+            <div class="row">
+               <div class="col-sm-3">
+                  <a href="{{ url_for('index') }}" class="btn btn-info" role="button" style="margin-bottom: 8px">Click here to calculate another route</a>
+               </div>
+               <div class="col-sm-2">
+                  <!--  Code to add translation feature to website obtained from https://translate.google.com/manager/website/-->
+                  <div id="google_translate_element" style="margin-bottom: 8px">
+                     <script type="text/javascript">
+                        function googleTranslateElementInit() {
+                          new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
+                        }
+                     </script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+                  </div>
+               </div>
+               <div class="col-sm-3" style="text-align: center" style="margin-bottom: 8px">
+                  <!--  Ideas for getting a toggle switch obtained from https://www.w3schools.com/howto/howto_css_switch.asp-->
+                  <label for="toggle" style="font-size:15px; text-align:left"> Click me to toggle night mode </label>
+                  <label class="switch">
+                  <input id="toggle" type="checkbox" onclick="toggleNightMode()">
+                  <span class="slider round"></span></label>
+               </div>
+            </div>
+            <div class="row">
+               <div class="col-md-12">
+                  <div class="containerMap">
+                     <div id="map-canvas">
+                        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+                        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA42LkjmNjm_bQCtgfGfnAIu-yZ9B1aRYU&callback=showMap" type="text/javascript"></script>
+                     </div>
+                  </div>
+               </div>
+               <br>
+            </div>
+            <br>
          </div>
-         <br>
       </div>
       <br>
-   </div>
-</div>
-<br>
-
-<script>
-    var stops = {{ stops|tojson|safe }};
-    var req = {{ req|tojson|safe }}
-    var timetable = {{ timetable|tojson|safe }}
-    var route = {{ req['route'] | tojson | safe}}
-
-    var key = route + ", " + req['direction'];
-
-
- // If there is a letter in the bus route name then check it matches the key, if it doesn't, make the letters uppercase to match the key
- if (stops[key] == null) {
-    routeForKey = route.toUpperCase();
-    key = routeForKey + ", " + req['direction'];
- }
-    
- var route_stops = stops[key];
- // Get list of passed by stops
- var flag = false;
- var stops_id = [];
- var stops_lat = [];
- var stops_lon = [];
- var stops_name = [];
-    
- $.each(route_stops['stop_id'], function(i, val) {
-    if (val == req['orig_stop_id']) flag = true;
-    if (flag) {
-        stops_id.push(route_stops['stop_id'][i]);
-        stops_lat.push(route_stops['stop_lat'][i]);
-        stops_lon.push(route_stops['stop_lon'][i]);
-        stops_name.push(route_stops['stop_name'][i]);
-    }
-    if (val == req['dest_stop_id']) flag = false;
- });
-    
- //----------------------------------------------//
- //    Function to custom information window     //
- //----------------------------------------------//
- function setInfoWindowStyle() {
-    // Reference : http://maps.marnoto.com/en/5wayscustomizeinfowindow/example.html
-    // Reference to the DIV that wraps the bottom of infowindow
-    var iwOuter = $('.gm-style-iw');
-    var iwBackground = iwOuter.prev();
-    // Removes background shadow DIV
-    iwBackground.children(':nth-child(2)').css({
-        'display': 'none'
-    });
-    // Removes white background DIV
-    iwBackground.children(':nth-child(4)').css({
-        'display': 'none'
-    });
-    // Moves the infowindow 115px to the right.
-    //iwOuter.parent().parent().css({left: '115px'});
-    // Moves the shadow of the arrow 76px to the left margin.
-    iwBackground.children(':nth-child(1)').attr('style', function(i, s) {
-        return s + 'left: 76px !important;'
-    });
-    // Moves the arrow 76px to the left margin.
-    iwBackground.children(':nth-child(3)').attr('style', function(i, s) {
-        return s + 'left: 76px !important;'
-    });
-    // Changes the desired tail shadow color.
-    iwBackground.children(':nth-child(3)').find('div').children().css({
-        'box-shadow': 'rgba(72, 181, 233, 0.6) 0px 1px 6px',
-        'z-index': '1'
-    });
-    // Reference to the div that groups the close button elements.
-    var iwCloseBtn = iwOuter.next();
-    // Apply the desired effect to the close button
-    iwCloseBtn.css({
-        opacity: '1',
-        right: '38px',
-        top: '3px',
-        border: '7px solid #fecb2f',
-        'border-radius': '13px',
-        'box-shadow': '0 0 5px #e5b82e'
-    });
-    // If the content of infowindow not exceed the set maximum height, then the gradient is removed.
-    if ($('.iw-content').height() < 140) {
-        $('.iw-bottom-gradient').css({
-            display: 'none'
-        });
-    }
-    // The API automatically applies 0.7 opacity to the button after the mouseout event. This function reverses this event to the desired value.
-    iwCloseBtn.mouseout(function() {
-        $(this).css({
-            opacity: '1'
-        });
-    });
- }
-    
- //----------------------------------------------//
- //                  Draw Map                    //
- //----------------------------------------------//
- function showMap() {
-    var directionsService = new google.maps.DirectionsService;
-    var directionsDisplay = new google.maps.DirectionsRenderer;
-    directionsDisplay.setOptions({
-        suppressMarkers: true
-    });
-    var map = new google.maps.Map(document.getElementById('map-canvas'), {
-        zoom: 14,
-        center: {
-            lat: stops_lat[0],
-            lng: stops_lon[0],
-            gestureHandling: 'greedy'
-        },
-    });
-    directionsDisplay.setMap(map);
-    var waypts = [];
-    orig_position = {
-        lat: stops_lat[0],
-        lng: stops_lon[0]
-    };
-    dest_position = {
-        lat: stops_lat[stops_lat.length - 1],
-        lng: stops_lon[stops_lat.length - 1]
-    };
-    for (var i = 1; i < stops_lat.length - 1; i++) waypts.push({
-        stopover: true,
-        location: {
-            lat: stops_lat[i],
-            lng: stops_lon[i]
-        }
-    });
-    directionsService.route({
-        origin: orig_position,
-        destination: dest_position,
-        waypoints: waypts,
-        optimizeWaypoints: true,
-        travelMode: 'DRIVING'
-    }, function(result, status) {
-        if (status == 'OK') {
-            directionsDisplay.setDirections(result);
-        }
-    });
-     
-    // Marker and information windows
-    // Markers for start and end stops
-    var endPoints = [];
-    var passStops = [];
-     
-    //----------------------------------------------//
-    //  Function to add start and end stops marker  //
-    //----------------------------------------------//
-    function addMarkerStartEnd(location, content, img) {
-        var marker = new google.maps.Marker({
-            position: location,
-            map: map,
-            icon: {
-                url: "{{ url_for('static', filename='') }}" + img,
-                scaledSize: new google.maps.Size(50, 50)
-            }
-        });
-        // Information window content
-        var contentString = '<div id="iw-container">' + '<div class="iw-title">' + content.stop_name + '</div>' + '<div class="iw-content">' + '<div class="iw-subTitle">Stop Number: ' + content.stop_id + '</div>' + '<div class="iw-subTitle" > Arrive at: ' + content.timetable + '</div>' + '</div>' + '<div class="iw-bottom-gradient"></div>' + '</div>';
-        // Information window
-        var infowindow = new google.maps.InfoWindow({
-            content: contentString,
-            minHeight: 10,
-        });
-        google.maps.event.addListener(marker, 'click', function() {
-            var iwOuter = $('.gm-style-iw');
-            iwOuter.parent().parent().css({
-                left: '50px'
-            });
-            infowindow.open(map, marker);
-        });
-        google.maps.event.addListener(infowindow, 'domready', function() {
-            setInfoWindowStyle();
-        });
-        //infoWindow.setContent(content + "<br> " + button);
-        infowindow.open(map, marker);
-        endPoints.push(marker);
-    }
-     
-    //------------------------------------------//
-    //  Function to add passed by stops marker  //
-    //------------------------------------------//
-    function addMarkerOntheWay(location, content) {
-        var circle = {
-            url: 'https://chadkillingsworth.github.io/geolocation-marker/images/gpsloc.png',
-            size: new google.maps.Size(34, 34),
-            scaledSize: new google.maps.Size(10, 10),
-            origin: new google.maps.Point(0, 0),
-            anchor: new google.maps.Point(-2, -2)
-        };
-        var marker = new google.maps.Marker({
-            position: location,
-            map: map,
-            icon: circle
-        });
-        // Information window
-        var contentString = '<div id="iw-container">' + '<div class="iw-title">' + content.stop_name + '</div>' + '<div class="iw-content">' + '<div class="iw-subTitle">Stop Number: ' + content.stop_id + '</div>' + '<div class="iw-subTitle" > Arrive at: ' + content.timetable + '</div>' + '</div>' + '<div class="iw-bottom-gradient"></div>' + '</div>';
-        var infowindow = new google.maps.InfoWindow({
-            content: contentString,
-            minHeight: 10
-        });
-        google.maps.event.addListener(infowindow, 'domready', function() {
-            setInfoWindowStyle();
-        });
-        google.maps.event.addListener(marker, 'mouseover', function(e) {
-            infowindow.open(map, marker);
-        });
-        google.maps.event.addListener(marker, 'mouseout', function(e) {
-            infowindow.close(map, marker);
-        });
-        passStops.push(marker);
-    };
-    // Call function to add start stops and end stops.
-    var stop_info = {
-        'stop_id': stops_id[0],
-        'stop_name': stops_name[0],
-        'timetable': timetable[0]
-    };
-    addMarkerStartEnd(orig_position, stop_info, 'markerRed.png');
-    var stop_info = {
-        'stop_id': stops_id[stops_id.length - 1],
-        'stop_name': stops_name[stops_name.length - 1],
-        'timetable': timetable[timetable.length - 1]
-    };
-    addMarkerStartEnd(dest_position, stop_info, 'markerGreen.png');
-    // Call function to add passed by stops.
-    for (var i = 1; i < stops_lat.length - 1; i++) {
-        var location = {
-            lat: stops_lat[i],
-            lng: stops_lon[i]
-        };
-        var stop_info = {
-            'stop_id': stops_id[i],
-            'stop_name': stops_name[i],
-            'timetable': timetable[i]
-        };
-        addMarkerOntheWay(location, stop_info);
-    }
-
-}
-</script>
-
-{% endblock %}
+      <script>
+         var stops = {{ stops|tojson|safe }};
+         var req = {{ req|tojson|safe }}
+         var timetable = {{ timetable|tojson|safe }}
+         var route = {{ req['route'] | tojson | safe}}
+         
+         var key = route + ", " + req['direction'];
+         
+         
+         // If there is a letter in the bus route name then check it matches the key, if it doesn't, make the letters uppercase to match the key
+         if (stops[key] == null) {
+         routeForKey = route.toUpperCase();
+         key = routeForKey + ", " + req['direction'];
+         }
+         
+         var route_stops = stops[key];
+         // Get list of passed by stops
+         var flag = false;
+         var stops_id = [];
+         var stops_lat = [];
+         var stops_lon = [];
+         var stops_name = [];
+         
+         $.each(route_stops['stop_id'], function(i, val) {
+         if (val == req['orig_stop_id']) flag = true;
+         if (flag) {
+             stops_id.push(route_stops['stop_id'][i]);
+             stops_lat.push(route_stops['stop_lat'][i]);
+             stops_lon.push(route_stops['stop_lon'][i]);
+             stops_name.push(route_stops['stop_name'][i]);
+         }
+         if (val == req['dest_stop_id']) flag = false;
+         });
+         
+         //----------------------------------------------//
+         //    Function to custom information window     //
+         //----------------------------------------------//
+         function setInfoWindowStyle() {
+         // Reference : http://maps.marnoto.com/en/5wayscustomizeinfowindow/example.html
+         // Reference to the DIV that wraps the bottom of infowindow
+         var iwOuter = $('.gm-style-iw');
+         var iwBackground = iwOuter.prev();
+         // Removes background shadow DIV
+         iwBackground.children(':nth-child(2)').css({
+             'display': 'none'
+         });
+         // Removes white background DIV
+         iwBackground.children(':nth-child(4)').css({
+             'display': 'none'
+         });
+         // Moves the infowindow 115px to the right.
+         //iwOuter.parent().parent().css({left: '115px'});
+         // Moves the shadow of the arrow 76px to the left margin.
+         iwBackground.children(':nth-child(1)').attr('style', function(i, s) {
+             return s + 'left: 76px !important;'
+         });
+         // Moves the arrow 76px to the left margin.
+         iwBackground.children(':nth-child(3)').attr('style', function(i, s) {
+             return s + 'left: 76px !important;'
+         });
+         // Changes the desired tail shadow color.
+         iwBackground.children(':nth-child(3)').find('div').children().css({
+             'box-shadow': 'rgba(72, 181, 233, 0.6) 0px 1px 6px',
+             'z-index': '1'
+         });
+         // Reference to the div that groups the close button elements.
+         var iwCloseBtn = iwOuter.next();
+         // Apply the desired effect to the close button
+         iwCloseBtn.css({
+             opacity: '1',
+             right: '38px',
+             top: '3px',
+             border: '7px solid #fecb2f',
+             'border-radius': '13px',
+             'box-shadow': '0 0 5px #e5b82e'
+         });
+         // If the content of infowindow not exceed the set maximum height, then the gradient is removed.
+         if ($('.iw-content').height() < 140) {
+             $('.iw-bottom-gradient').css({
+                 display: 'none'
+             });
+         }
+         // The API automatically applies 0.7 opacity to the button after the mouseout event. This function reverses this event to the desired value.
+         iwCloseBtn.mouseout(function() {
+             $(this).css({
+                 opacity: '1'
+             });
+         });
+         }
+         
+         //----------------------------------------------//
+         //                  Draw Map                    //
+         //----------------------------------------------//
+         function showMap() {
+         var directionsService = new google.maps.DirectionsService;
+         var directionsDisplay = new google.maps.DirectionsRenderer;
+         directionsDisplay.setOptions({
+             suppressMarkers: true
+         });
+         var map = new google.maps.Map(document.getElementById('map-canvas'), {
+             center: {
+                 lat: stops_lat[0],
+                 lng: stops_lon[0],
+                 gestureHandling: 'greedy'
+             },
+             zoom: 14,
+         });
+         directionsDisplay.setMap(map);
+         var waypts = [];
+         orig_position = {
+             lat: stops_lat[0],
+             lng: stops_lon[0]
+         };
+         dest_position = {
+             lat: stops_lat[stops_lat.length - 1],
+             lng: stops_lon[stops_lat.length - 1]
+         };
+         for (var i = 1; i < stops_lat.length - 1; i++) waypts.push({
+             stopover: true,
+             location: {
+                 lat: stops_lat[i],
+                 lng: stops_lon[i]
+             }
+         });
+         directionsService.route({
+             origin: orig_position,
+             destination: dest_position,
+             waypoints: waypts,
+             optimizeWaypoints: true,
+             travelMode: 'DRIVING'
+         }, function(result, status) {
+             if (status == 'OK') {
+                 directionsDisplay.setDirections(result);
+             }
+         });
+          
+         // Marker and information windows
+         // Markers for start and end stops
+         var endPoints = [];
+         var passStops = [];
+          
+         //----------------------------------------------//
+         //  Function to add start and end stops marker  //
+         //----------------------------------------------//
+         function addMarkerStartEnd(location, content, img) {
+             var marker = new google.maps.Marker({
+                 position: location,
+                 map: map,
+                 icon: {
+                     url: "{{ url_for('static', filename='') }}" + img,
+                     scaledSize: new google.maps.Size(50, 50)
+                 }
+             });
+             // Information window content
+             var contentString = '<div id="iw-container">' + '<div class="iw-title">' + content.stop_name + '</div>' + '<div class="iw-content">' + '<div class="iw-subTitle">Stop Number: ' + content.stop_id + '</div>' + '<div class="iw-subTitle" > Arrive at: ' + content.timetable + '</div>' + '</div>' + '<div class="iw-bottom-gradient"></div>' + '</div>';
+             // Information window
+             var infowindow = new google.maps.InfoWindow({
+                 content: contentString,
+                 minHeight: 10,
+             });
+             google.maps.event.addListener(marker, 'click', function() {
+                 var iwOuter = $('.gm-style-iw');
+                 iwOuter.parent().parent().css({
+                     left: '50px'
+                 });
+                 infowindow.open(map, marker);
+             });
+             google.maps.event.addListener(infowindow, 'domready', function() {
+                 setInfoWindowStyle();
+             });
+             //infoWindow.setContent(content + "<br> " + button);
+             infowindow.open(map, marker);
+             endPoints.push(marker);
+         }
+          
+         //------------------------------------------//
+         //  Function to add passed by stops marker  //
+         //------------------------------------------//
+         function addMarkerOntheWay(location, content) {
+             var circle = {
+                 url: 'https://chadkillingsworth.github.io/geolocation-marker/images/gpsloc.png',
+                 size: new google.maps.Size(34, 34),
+                 scaledSize: new google.maps.Size(10, 10),
+                 origin: new google.maps.Point(0, 0),
+                 anchor: new google.maps.Point(-2, -2)
+             };
+             var marker = new google.maps.Marker({
+                 position: location,
+                 map: map,
+                 icon: circle
+             });
+             // Information window
+             var contentString = '<div id="iw-container">' + '<div class="iw-title">' + content.stop_name + '</div>' + '<div class="iw-content">' + '<div class="iw-subTitle">Stop Number: ' + content.stop_id + '</div>' + '<div class="iw-subTitle" > Arrive at: ' + content.timetable + '</div>' + '</div>' + '<div class="iw-bottom-gradient"></div>' + '</div>';
+             var infowindow = new google.maps.InfoWindow({
+                 content: contentString,
+                 minHeight: 10
+             });
+             google.maps.event.addListener(infowindow, 'domready', function() {
+                 setInfoWindowStyle();
+             });
+             google.maps.event.addListener(marker, 'mouseover', function(e) {
+                 infowindow.open(map, marker);
+             });
+             google.maps.event.addListener(marker, 'mouseout', function(e) {
+                 infowindow.close(map, marker);
+             });
+             passStops.push(marker);
+         };
+         // Call function to add start stops and end stops.
+         var stop_info = {
+             'stop_id': stops_id[0],
+             'stop_name': stops_name[0],
+             'timetable': timetable[0]
+         };
+         addMarkerStartEnd(orig_position, stop_info, 'markerRed.png');
+         var stop_info = {
+             'stop_id': stops_id[stops_id.length - 1],
+             'stop_name': stops_name[stops_name.length - 1],
+             'timetable': timetable[timetable.length - 1]
+         };
+         addMarkerStartEnd(dest_position, stop_info, 'markerGreen.png');
+         // Call function to add passed by stops.
+         for (var i = 1; i < stops_lat.length - 1; i++) {
+             var location = {
+                 lat: stops_lat[i],
+                 lng: stops_lon[i]
+             };
+             var stop_info = {
+                 'stop_id': stops_id[i],
+                 'stop_name': stops_name[i],
+                 'timetable': timetable[i]
+             };
+             addMarkerOntheWay(location, stop_info);
+         }
+         
+         }
+      </script>
+      <footer class="footer">
+         <p style="padding:10px"> &copy; Team1010: Emma Byrne, Wen-Ting Chang, Ian Fuchs, Willie Delaney </p>
+      </footer>
+   </body>
+</html>

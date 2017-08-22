@@ -47,6 +47,13 @@
                <div class="col-sm-3">
                   <a href="{{ url_for('index') }}" class="btn btn-info" role="button" style="margin-bottom: 8px">Click here to calculate another route</a>
                </div>
+               <div class="col-sm-3" style="text-align: center" style="margin-bottom: 8px">
+                  <!--  Ideas for getting a toggle switch obtained from https://www.w3schools.com/howto/howto_css_switch.asp-->
+                  <label for="toggle" style="font-size:15px; text-align:left"> Click me to toggle night mode </label>
+                  <label class="switch">
+                  <input id="toggle" type="checkbox" onclick="toggleNightMode()">
+                  <span class="slider round"></span></label>
+               </div>
                <div class="col-sm-2">
                   <!--  Code to add translation feature to website obtained from https://translate.google.com/manager/website/-->
                   <div id="google_translate_element" style="margin-bottom: 8px">
@@ -56,13 +63,6 @@
                         }
                      </script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
                   </div>
-               </div>
-               <div class="col-sm-3" style="text-align: center" style="margin-bottom: 8px">
-                  <!--  Ideas for getting a toggle switch obtained from https://www.w3schools.com/howto/howto_css_switch.asp-->
-                  <label for="toggle" style="font-size:15px; text-align:left"> Click me to toggle night mode </label>
-                  <label class="switch">
-                  <input id="toggle" type="checkbox" onclick="toggleNightMode()">
-                  <span class="slider round"></span></label>
                </div>
             </div>
             <div class="row">
@@ -79,23 +79,21 @@
             <br>
          </div>
       </div>
-      <br>
-      <script>
+      <br><script>
          var stops = {{ stops|tojson|safe }};
          var req = {{ req|tojson|safe }}
          var timetable = {{ timetable|tojson|safe }}
          var route = {{ req['route'] | tojson | safe}}
          
-         var key = route + ", " + req['direction'];
-         
+         var key = route + ", " + req['direction'];         
          
          // If there is a letter in the bus route name then check it matches the key, if it doesn't, make the letters uppercase to match the key
          if (stops[key] == null) {
          routeForKey = route.toUpperCase();
          key = routeForKey + ", " + req['direction'];
          }
-         
          var route_stops = stops[key];
+         
          // Get list of passed by stops
          var flag = false;
          var stops_id = [];
@@ -150,10 +148,10 @@
          // Apply the desired effect to the close button
          iwCloseBtn.css({
              opacity: '1',
-             right: '38px',
-             top: '3px',
-             border: '7px solid #fecb2f',
-             'border-radius': '13px',
+             right: '43px',
+             top: '5px',
+             border: '2px solid #fecb2f',
+             'border-radius': '2px',
              'box-shadow': '0 0 5px #e5b82e'
          });
          // If the content of infowindow not exceed the set maximum height, then the gradient is removed.
@@ -177,15 +175,15 @@
          var directionsService = new google.maps.DirectionsService;
          var directionsDisplay = new google.maps.DirectionsRenderer;
          directionsDisplay.setOptions({
-             suppressMarkers: true
+             suppressMarkers: true,
+             preserveViewport: true
          });
          var map = new google.maps.Map(document.getElementById('map-canvas'), {
+             zoom: 15,
              center: {
                  lat: stops_lat[0],
-                 lng: stops_lon[0],
-                 gestureHandling: 'greedy'
+                 lng: stops_lon[0]
              },
-             zoom: 14,
          });
          directionsDisplay.setMap(map);
          var waypts = [];
@@ -215,12 +213,12 @@
                  directionsDisplay.setDirections(result);
              }
          });
-          
+             
          // Marker and information windows
          // Markers for start and end stops
          var endPoints = [];
          var passStops = [];
-          
+             
          //----------------------------------------------//
          //  Function to add start and end stops marker  //
          //----------------------------------------------//
@@ -254,7 +252,7 @@
              infowindow.open(map, marker);
              endPoints.push(marker);
          }
-          
+             
          //------------------------------------------//
          //  Function to add passed by stops marker  //
          //------------------------------------------//
@@ -277,10 +275,14 @@
                  content: contentString,
                  minHeight: 10
              });
-             google.maps.event.addListener(infowindow, 'domready', function() {
+             google.maps.event.addListener(infowindow, 'domready', function(e) {
                  setInfoWindowStyle();
              });
              google.maps.event.addListener(marker, 'mouseover', function(e) {
+                 var iwOuter = $('.gm-style-iw');
+                 iwOuter.parent().parent().css({
+                     left: '43px'
+                 });
                  infowindow.open(map, marker);
              });
              google.maps.event.addListener(marker, 'mouseout', function(e) {

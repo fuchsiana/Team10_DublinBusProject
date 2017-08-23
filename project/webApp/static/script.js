@@ -165,13 +165,11 @@ $(function() {
 
 // Function to ensure time selected is correct
 function checkTime() {
-	var time = $('#clockPicker');
-	console.log(time.val().length);
+	var time = $('#time');
 	if (time.val() < '06:00' || time.val() > '23:55') {
-		console.log("Pick a different time");
 		alert("Busses only operate betwen 6am and 11.30pm, please select a time within that range :)");
 		// Resets the value of clockPicker so that an incorrect time can't be inputted - https://stackoverflow.com/questions/11755080/jquery-clear-input-default-value
-		$('#clockPicker').val("");
+		$('#time').val("");
 	}
 }
 

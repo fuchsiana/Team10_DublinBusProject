@@ -36,7 +36,7 @@
          <br>
          <div class="container">
             <div class="row">
-               <div class="col-sm-6" style="padding:10">
+               <div class="col-sm-6" style="padding:20px">
                   <div style="width:100%">
                      <h2> Leap and Cash Single Journey Fares - Adult and Student</h2>
                      <div class="table-responsive">
@@ -84,7 +84,7 @@
                      </div>
                   </div>
                </div>
-               <div class="col-sm-6" style="padding:10">
+               <div class="col-sm-6" style="padding:20px">
                   <div style="width:100%">
                      <h2> Leap and Cash Single Journey Fares - Child</h2>
                      <div class="table-responsive">
@@ -136,19 +136,41 @@
             </div>
             <br>
             <div class="row">
-               <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#calculateFare">Click here to calculate your fare</button>
-               <a href="https://www.leapcard.ie/Home/index.html" class="btn btn-success">Click here to top up your leap card</a>
-            </div>
-            <div class="row">
-               <div id="calculateFare" class="collapse">
-                  <div class="col-md-12"><br>
-                     <iframe src="https://www.dublinbus.ie/Fare-Calculator/" style="height: 560px; width:100%"></iframe>
+               <div class="col-sm-5">
+                  <button type="button" class="btn btn-primary" style="margin-bottom: 8px" data-toggle="collapse" data-target="#calculateFare">Click here to calculate your fare</button>
+                  <a href="https://www.leapcard.ie/Home/index.html" class="btn btn-success" style="margin-bottom: 8px">Click here to top up your leap card</a>
+               </div>
+               <div class="col-sm-7">
+                  <div class="col-sm-4" style="text-align: center">
+                     <!--  Ideas for getting a toggle switch obtained from https://www.w3schools.com/howto/howto_css_switch.asp-->
+                     <label for="toggle" style="font-size:15px; text-align:left"> Click me to toggle night mode </label>
+                     <label class="switch">
+                     <input id="toggle" type="checkbox" onclick="toggleNightMode()">
+                     <span class="slider round"></span></label>
+                  </div>
+                  <div class="col-sm-3">
+                     <!--  Code to add translation feature to website obtained from https://translate.google.com/manager/website/-->
+                     <div id="google_translate_element">
+                        <script type="text/javascript">
+                           function googleTranslateElementInit() {
+                             new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
+                           }
+                        </script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+                     </div>
+                  </div>
+               </div>
+               <div class="row">
+                  <div id="calculateFare" class="collapse">
+                     <div class="col-md-12"><br>
+                        <iframe src="https://www.dublinbus.ie/Fare-Calculator/" style="height: 560px; width:100%"></iframe>
+                     </div>
                   </div>
                </div>
             </div>
+            <br>
          </div>
-         <br>
       </div>
+      <br>
       <footer class="footer">
          <p style="padding:10px"> &copy; Team1010: Emma Byrne, Wen-Ting Chang, Ian Fuchs, Willie Delaney </p>
       </footer>

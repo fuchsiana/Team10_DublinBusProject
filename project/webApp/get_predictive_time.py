@@ -4,17 +4,6 @@ import numpy as np
 import requests
 import json
 import datetime
-import statsmodels as stm
-import statsmodels.formula.api as sm
-from sklearn.feature_selection import VarianceThreshold
-from sklearn import metrics
-from sklearn.linear_model import LinearRegression as LinR
-from sklearn.svm import SVR
-from sklearn.ensemble import GradientBoostingRegressor as GBR
-from sklearn.ensemble import RandomForestRegressor as RFR
-from sklearn.model_selection import train_test_split
-from sklearn.model_selection import RandomizedSearchCV as RSCV
-from sklearn.metrics.scorer import make_scorer
 from scipy import stats
 from sklearn.externals import joblib
 from flask import Flask, flash, render_template, request, abort
@@ -37,9 +26,10 @@ def get_trip_id(req):
 
     base on the request form from frontend. Input parameter is dict datatype
     which store the form information."""
-
-    # engine = connect_db('team1010.cnmhll8wqxlt.us-west-2.rds.amazonaws.com', '3306', 'DBus', 'Team1010_User', 'DubBus_Team1010')
+    
+    # Engine when running on server
     #engine = connect_db('127.0.0.1', '3306', 'DBus', 'root', 'password2.txt')
+    # Engine when running locally
     engine = connect_db('137.43.49.45', '3306', 'DBus', 'remoteuser', 'password2.txt')
     sql = """
         SELECT DISTINCT rss.trip_id FROM

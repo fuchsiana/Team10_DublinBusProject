@@ -3,10 +3,7 @@ Created on 20 Jun 2017
 
 @author: EByrn
 '''
-# Make sure you install sql alchemy and pymysql to run these. Just use pip install to do so
-# This is the main flask app, run the run.py file to run the code
 
-#from webApp import app
 from flask import Flask, flash, render_template, request, abort, jsonify
 from flask_cors import CORS, cross_origin
 from Connect_DB import connect_db
@@ -42,6 +39,9 @@ def generalInfo():
 @app.route('/form', methods=['POST'])
 def form():
     ''' Function to get time predictions from db '''
+    # Engine when running on server
+    #engine = connect_db('127.0.0.1', '3306', 'DBus', 'root', 'password2.txt')
+    # Engine when running locally
     engine = connect_db('137.43.49.45', '3306', 'DBus', 'remoteuser', 'password2.txt')
     req = {}
     req['route'] = ROUTE
@@ -82,6 +82,9 @@ def direction():
     global ROUTE
 
     ROUTE = request.args.get('route').zfill(4)
+    # Engine when running on server
+    #engine = connect_db('127.0.0.1', '3306', 'DBus', 'root', 'password2.txt')
+    # Engine when running locally
     engine = connect_db('137.43.49.45', '3306', 'DBus', 'remoteuser', 'password2.txt')
 
     # Get the direction
@@ -105,6 +108,9 @@ def stops():
     ''' This function gets the corresponding stops for the direction along the chosen route '''
     DIRECTION = request.args.get('direction')
 
+    # Engine when running on server
+    #engine = connect_db('127.0.0.1', '3306', 'DBus', 'root', 'password2.txt')
+    # Engine when running locally
     engine = connect_db('137.43.49.45', '3306', 'DBus', 'remoteuser', 'password2.txt')
 
     sql = """ SELECT stop_id, stop_name FROM routes_stops WHERE route_short_name = %s AND trip_headsign = %s;"""

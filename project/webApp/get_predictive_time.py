@@ -158,7 +158,7 @@ def get_predictive_travel_time(trip_id, req):
         # Change data type
         set_to_zero = []
         frame['Rain'] = frame['Rain'].astype('float32')
-        frame['Rain'] = frame['WindSpeed'].astype('float32')
+        frame['WindSpeed'] = frame['WindSpeed'].astype('float32')
         frame['JPID_length'] = frame['JPID_length'].astype(str).astype(int)
         for c in frame.columns:
             if c.find('HF') != -1 or c.find('Day') != -1 or c.find('SchoolHoliday') != -1:

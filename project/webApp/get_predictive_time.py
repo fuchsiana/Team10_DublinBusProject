@@ -158,7 +158,7 @@ def get_predictive_travel_time(trip_id, req):
         # Change data type
         set_to_zero = []
         frame['Rain'] = frame['Rain'].astype('float32')
-        frame['Rain'] = frame['WindSpeed'].astype('float32')
+        frame['WindSpeed'] = frame['WindSpeed'].astype('float32')
         frame['JPID_length'] = frame['JPID_length'].astype(str).astype(int)
         for c in frame.columns:
             if c.find('HF') != -1 or c.find('Day') != -1 or c.find('SchoolHoliday') != -1:
@@ -167,8 +167,10 @@ def get_predictive_travel_time(trip_id, req):
         # Set value for input dataframe
         frame.set_value(index=1, col='Rain', value=rain)
         frame.set_value(index=1, col='WindSpeed', value=wind_speed)
-        frame.set_value(index=1, col='HF_' + req['time'].split(':')[0], value=1)
-        frame.set_value(index=1, col='Day_' + req['day'], value=1)
+        if 'HF_' + req['time'].split(':')[0] in frame.columns:
+            frame.set_value(index=1, col='HF_' + req['time'].split(':')[0], value=1)
+        if 'Day_' + req['day'] in frame.columns:
+            frame.set_value(index=1, col='Day_' + req['day'], value=1)
 
         # Get pickle file
         model = joblib.load('./SSID_XXXX_model_pkls/' + ssid + '.pkl')

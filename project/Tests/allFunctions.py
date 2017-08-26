@@ -20,8 +20,7 @@ def connect_db(URI, PORT, DB, USER, password):
 
 def test_query():
     ''' Query to return the number of items returned from the MySQL database '''
-    engine = connect_db('team1010.cnmhll8wqxlt.us-west-2.rds.amazonaws.com', '3306', 'DBus', 'Team1010_User',
-                        'password.txt')
+    engine = connect_db('137.43.49.45', '3306', 'DBus', 'remoteuser', 'password2.txt')
     sql = "SELECT count(trip_headsign) from routes where route_short_name = '0150';"
     rows = engine.execute(sql).fetchall()
     engine.dispose()
@@ -33,7 +32,7 @@ def test_query():
 #################################
 def make_table():
     ''' Function to connect to the database and create a table if it doesn't already exist '''
-    engine = connect_db('team1010.cnmhll8wqxlt.us-west-2.rds.amazonaws.com', '3306', 'Team1010', 'Team1010_User','password.txt')
+    engine = connect_db('137.43.49.45', '3306', 'Team1010_Test', 'remoteuser', 'password2.txt')
     try:
         sql = """CREATE TABLE IF NOT EXISTS test2
             (route VARCHAR(45) NOT NULL,
@@ -49,7 +48,7 @@ def make_table():
         
 def write_to_table():
     ''' Function to connect to the database and insert values into a specific table '''
-    engine = connect_db('team1010.cnmhll8wqxlt.us-west-2.rds.amazonaws.com', '3306', 'Team1010', 'Team1010_User', 'password.txt')
+    engine = connect_db('137.43.49.45', '3306', 'Team1010_Test', 'remoteuser', 'password2.txt')
     try:
         sql = """ INSERT INTO test2 (route, day, origin_stop, destination_stop) VALUES ("46A", "Monday", "1", "10"); """
         engine.execute(sql)
@@ -61,7 +60,7 @@ def write_to_table():
         
 def make_table_and_write_to_table():
     ''' Query to return the number of items returned from the MySQL database '''
-    engine = connect_db('team1010.cnmhll8wqxlt.us-west-2.rds.amazonaws.com', '3306', 'Team1010', 'Team1010_User','password.txt')
+    engine = connect_db('137.43.49.45', '3306', 'Team1010_Test', 'remoteuser', 'password2.txt')
     make_table()
     write_to_table()
     sql = "SELECT * from test2;"
@@ -72,5 +71,3 @@ def make_table_and_write_to_table():
             results.append(j)
     engine.dispose()
     return results
-
-## Other functions

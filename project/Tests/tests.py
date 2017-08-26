@@ -18,7 +18,7 @@ from allFunctions import *
 from flask import Flask
 import unittest
 import os
-from flask_testing import TestCase
+#from flask_testing import TestCase
 
 
 class Test(unittest.TestCase):

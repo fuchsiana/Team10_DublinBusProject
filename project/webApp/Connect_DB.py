@@ -3,8 +3,6 @@ Created on 8 Jul 2017
 
 @author: EByrn
 '''
-
-#import sqlalchemy
 from sqlalchemy import create_engine
 
 # To create engine - adapted from previous projects and http://docs.sqlalchemy.org/en/latest/core/engines.html

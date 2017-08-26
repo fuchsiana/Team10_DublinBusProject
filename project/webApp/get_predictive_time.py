@@ -16,8 +16,6 @@ logging.basicConfig()
 logging.getLogger('sqlalchemy').setLevel(logging.ERROR)
 
 
-
-
 # ==================================
 # Get trip_id list
 # ==================================
@@ -147,6 +145,7 @@ def get_predictive_travel_time(trip_id, req):
 
         # Prepare dataframe to predict
         feature = pd.read_csv('SSID_model_features.csv')
+        feature = feature.rename(columns={'14781479': 'SSID'})
         feature['SSID'] = feature['SSID'].apply(lambda x: str(x).zfill(8))
         frame = feature[feature.SSID == ssid]
         frame.dropna(axis=1, how='all', inplace=True)
@@ -158,7 +157,8 @@ def get_predictive_travel_time(trip_id, req):
         # Change data type
         set_to_zero = []
         frame['Rain'] = frame['Rain'].astype('float32')
-        frame['Rain'] = frame['WindSpeed'].astype('float32')
+        #frame['Rain'] = frame['WindSpeed'].astype('float32')
+        frame['WindSpeed'] = frame['WindSpeed'].astype('float32')
         frame['JPID_length'] = frame['JPID_length'].astype(str).astype(int)
         for c in frame.columns:
             if c.find('HF') != -1 or c.find('Day') != -1 or c.find('SchoolHoliday') != -1:

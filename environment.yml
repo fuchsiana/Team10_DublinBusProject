@@ -1,8 +1,10 @@
 name: DublinBus
 channels:
+- anaconda
 - conda-forge
 - defaults
 dependencies:
+- flask-cors=3.0.3=py36_0
 - arrow-cpp=0.4.1=np113py36_vc14_3
 - asn1crypto=0.22.0=py36_0
 - bkcharts=0.2=py36_0
@@ -96,10 +98,16 @@ dependencies:
 - wheel=0.29.0=py36_0
 - zlib=1.2.8=vc14_3
 - pip:
+  - gitdb2==2.0.2
+  - gitpython==2.1.5
   - ipython-genutils==0.2.0
+  - jsonschema==2.6.0
   - jupyter-client==5.1.0
   - jupyter-core==4.3.0
+  - nbdime==0.3.0
+  - nbformat==4.4.0
   - prompt-toolkit==1.0.14
+  - smmap2==2.0.3
   - win-inet-pton==1.0.1
 prefix: C:\CS\Anaconda\envs\DublinBus
 

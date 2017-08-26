@@ -42,4 +42,4 @@ _5. Output_SSID_Traveling_Time.py_
 
 _supplemental_data_files:_
 
-This folder contains the weather data being used from three Dublin weather stations, and three versions of the NTA GTFS Dublin Bus data, from 2012, 2013, and 2017.  We are using the files from googletransitdbfeedp20121129-1547.zip
+This folder contains the weather data being used from three Dublin weather stations, and the NTA GTFS Dublin Bus data from 2012, in googletransitdbfeedp20121129-1547.zip

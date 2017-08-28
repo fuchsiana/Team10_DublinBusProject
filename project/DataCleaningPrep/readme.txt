@@ -11,7 +11,7 @@ _1. Initial_Cleaning_of_All_via_Pickle-v3.ipynb_
 * Outputs single full dataset feather file to be loaded into second notebook.
 * All fields starting with '#0' are purely descriptive and can be skipped to speed up processing (easiest way to ensure this if running whole notebook is to turn all such cells from Code to Markdown first).
 
-_2. Stage_Two_Cleaning_v5.ipynb_
+_2. Stage_Two_Cleaning_v6.ipynb_
 
 * Inputs full dataset feather file produced by first notebook.
 * Also inputs stops.txt taken from googletransit20121129-1547 zip file and all three weather data files (all in: https://github.com/wjdelaney/Team-10/blob/master/project/DataAnalytics/supplemental_data_files); put these into the same folder as the notebook.

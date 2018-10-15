@@ -23,4 +23,4 @@ All the notebooks in the [SSID_Analysis](../master/project/SSID_Analysis), [Mode
 
 I also produced all the documentation for these folders.
 
-* Note that some of these notebooks need to be downloaded for viewing due to size or GitHub display-formatting issues.
+*Note that some of these notebooks need to be downloaded for viewing due to size or GitHub display-formatting issues.
